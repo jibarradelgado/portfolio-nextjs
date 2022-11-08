@@ -1,0 +1,54 @@
+scalar DateTime
+
+type Query {
+  assets: [Asset]!
+}
+
+interface BaseModel {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime
+}
+
+type Asset implements BaseModel {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime
+
+  name: String!
+  value: Float!
+  quantity: Float
+  type: AssetType!
+  user: User!
+  attribute: Attribute
+  assetTypeId: Int!
+  userId: Int!
+  attributeId: Int
+}
+
+type AssetType implements BaseModel {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime
+  name: String!
+  targetPercentage: Float!
+  user: User!
+}
+
+type User implements BaseModel {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime
+  username: String
+  password: String
+  admin: Boolean
+}
+
+type Attribute {
+  id: ID!
+  updatedAt: DateTime
+  type: String
+  name: String
+  symbol: String
+  lastValue: Float
+}
