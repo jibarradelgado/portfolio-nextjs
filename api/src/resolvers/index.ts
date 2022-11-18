@@ -4,11 +4,10 @@ import * as scalars from './scalars'
 export default {
   ...scalars,
   Query: {
-    // avo: avo.findOne,
     assets: asset.findAll,
   },
-  // Mutation: {
-  //   createAvo: avo.createAvo,
-  // },
+  Mutation: {
+    upsertAsset: asset.upsertAsset,
+  },
   Asset: asset.resolver,
 }

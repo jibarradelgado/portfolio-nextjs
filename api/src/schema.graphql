@@ -1,7 +1,11 @@
 scalar DateTime
 
 type Query {
-  assets: [Asset]!
+  assets(where: AssetWhereInput): [Asset]!
+}
+
+type Mutation {
+  upsertAsset(where: AssetWhereInput!, data: AssetCreateInput!): Asset!
 }
 
 interface BaseModel {
@@ -51,4 +55,17 @@ type Attribute {
   name: String
   symbol: String
   lastValue: Float
+}
+
+input AssetCreateInput {
+  name: String!
+  value: Float!
+  quantity: Float
+  assetTypeId: Int!
+  userId: Int!
+  attributeId: Int
+}
+
+input AssetWhereInput {
+  id: ID!
 }

@@ -1,15 +1,23 @@
-import type { Asset, Attribute, User, AssetType, PrismaClient } from '@prisma/client'
+import type { Asset, Attribute, User, AssetType, PrismaClient, Prisma } from '@prisma/client'
 
+type ResolverParent = unknown
 type ResolverContext = {
   orm: PrismaClient
 }
 
 export function findAll(
-  parent: unknown,
-  arg: unknown,
+  parent: ResolverParent,
+  args: { where?: Prisma.AssetWhereInput },
   context: ResolverContext
 ): Promise<Asset[]> {
-  return context.orm.asset.findMany()
+  return context.orm.asset.findMany({
+    include: {
+      attribute: true,
+      user: true,
+      type: true,
+    },
+    where: args.where,
+  })
 }
 
 export const resolver: Record<
@@ -42,3 +50,39 @@ export const resolver: Record<
     userId: (parent) => parent.userId,
     attributeId: (parent) => parent
   }
+
+export async function upsertAsset(
+  parent: unknown,
+  {
+    where,
+    data,
+  }: {
+    where: Pick<Asset, 'id' >,
+    data: Pick<Asset, 'name' | 'quantity' | 'value' | 'assetTypeId' | 'attributeId' | 'userId'>
+  },
+  { orm }: { orm : PrismaClient }
+): Promise<Asset> {
+  const { name, quantity, value, assetTypeId, attributeId, userId } = data
+  const { id } = where
+  const asset = await orm.asset.upsert({
+    where: {
+      id: id
+    },
+    update: {
+      name: name,
+      quantity: quantity,
+      value: value,
+      assetTypeId: assetTypeId
+    },
+    create: {
+      name: name,
+      quantity: quantity,
+      value: value,
+      assetTypeId: assetTypeId,
+      attributeId: attributeId,
+      userId: userId
+    }
+  })
+
+  return asset
+}
