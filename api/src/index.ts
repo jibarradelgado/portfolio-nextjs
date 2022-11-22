@@ -19,9 +19,10 @@ const orm = new PrismaClient()
     resolvers,
     context: ({ req }) => {
       //authenticate before graphql resolvers
-      if (req.user == undefined) {
-        throw new AuthenticationError('Unauthenticated request')
-      }
+      // if (req.user == undefined) {
+      //   throw new AuthenticationError('Unauthenticated')
+      // }
+      console.log('req user: ', req.user)
       return { orm, user: req.user }
     },
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],

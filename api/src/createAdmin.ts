@@ -39,6 +39,14 @@ prompt.get(
       },
     })
 
-    console.log(`User ${user.username} created with id ${user.id}\n`)
+    const assetType = await orm.assetType.create({
+      data: {
+        name: "General",
+        targetPercentage: 100,
+        userId: user.id
+      }
+    })
+
+    console.log(`User ${user.username} created with id ${user.id} and General assetType with id ${assetType.id}\n`)
   }
 )

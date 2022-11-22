@@ -2,10 +2,12 @@ scalar DateTime
 
 type Query {
   assets(where: AssetWhereInput): [Asset]!
+  assetTypes(where: AssetTypeWhereInput): [AssetType]!
 }
 
 type Mutation {
   upsertAsset(where: AssetWhereInput!, data: AssetCreateInput!): Asset!
+  upsertAssetType(where: AssetTypeWhereInput!, data: AssetTypeCreateInput!): AssetType
 }
 
 interface BaseModel {
@@ -37,6 +39,7 @@ type AssetType implements BaseModel {
   name: String!
   targetPercentage: Float!
   user: User!
+  userId: Int!
 }
 
 type User implements BaseModel {
@@ -67,5 +70,15 @@ input AssetCreateInput {
 }
 
 input AssetWhereInput {
+  id: ID!
+}
+
+input AssetTypeCreateInput {
+  name: String!
+  targetPercentage: Float!
+  userId: Int!
+}
+
+input AssetTypeWhereInput {
   id: ID!
 }
