@@ -3,11 +3,19 @@ scalar DateTime
 type Query {
   assets(where: AssetWhereInput): [Asset]!
   assetTypes(where: AssetTypeWhereInput): [AssetType]!
+  attributes(where: AttributeWhereInput): [Attribute]!
 }
 
 type Mutation {
-  upsertAsset(where: AssetWhereInput!, data: AssetCreateInput!): Asset!
-  upsertAssetType(where: AssetTypeWhereInput!, data: AssetTypeCreateInput!): AssetType
+  createAsset(data: AssetCreateInput!): Asset!
+  updateAsset(where: AssetWhereInput!, data: AssetCreateInput!): Asset!
+  deleteAsset(where: AssetWhereInput!): Asset
+  createAssetType(data: AssetCreateInput!): AssetType!
+  updateAssetType(where: AssetTypeWhereInput!, data: AssetTypeCreateInput!): AssetType!
+  deleteAssetType(where: AssetTypeWhereInput!): AssetType
+  createAttribute(data: AttributeCreateInput!): Attribute!
+  updateAttribute(where: AttributeWhereInput!, data: AttributeCreateInput!): Attribute!
+  deleteAttribute(where: AttributeWhereInput!): Attribute
 }
 
 interface BaseModel {
@@ -65,7 +73,7 @@ input AssetCreateInput {
   value: Float!
   quantity: Float
   assetTypeId: Int!
-  userId: Int!
+  userId: Int
   attributeId: Int
 }
 
@@ -76,9 +84,20 @@ input AssetWhereInput {
 input AssetTypeCreateInput {
   name: String!
   targetPercentage: Float!
-  userId: Int!
+  userId: Int
 }
 
 input AssetTypeWhereInput {
+  id: ID!
+}
+
+input AttributeCreateInput {
+  type: String!
+  name: String!
+  symbol: String!
+  lastValue: Float!
+}
+
+input AttributeWhereInput {
   id: ID!
 }

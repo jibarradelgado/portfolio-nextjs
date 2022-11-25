@@ -51,36 +51,75 @@ export const resolver: Record<
     attributeId: (parent) => parent
   }
 
-export async function upsertAsset(
+export async function createAsset(
   parent: unknown,
   {
-    where,
-    data,
+    data
   }: {
-    where: Pick<Asset, 'id' >,
     data: Pick<Asset, 'name' | 'quantity' | 'value' | 'assetTypeId' | 'attributeId' | 'userId'>
   },
   { orm }: { orm : PrismaClient }
 ): Promise<Asset> {
   const { name, quantity, value, assetTypeId, attributeId, userId } = data
-  const { id } = where
-  const asset = await orm.asset.upsert({
-    where: {
-      id: id
-    },
-    update: {
-      name: name,
-      quantity: quantity,
-      value: value,
-      assetTypeId: assetTypeId
-    },
-    create: {
+  const asset = await orm.asset.create({
+    data: {
       name: name,
       quantity: quantity,
       value: value,
       assetTypeId: assetTypeId,
       attributeId: attributeId,
       userId: userId
+    }
+  })
+
+  return asset
+}
+
+export async function updateAsset(
+  parent: unknown,
+  {
+    where,
+    data,
+  }: {
+    where: Pick<Asset, 'id' >,
+    data: Pick<Asset, 'name' | 'quantity' | 'value' | 'assetTypeId' | 'attributeId' >
+  },
+  { orm }: { orm : PrismaClient }
+): Promise<Asset> {
+  const { name, quantity, value, assetTypeId, attributeId } = data
+  let { id } = where
+  if (typeof(id) === 'string') {
+    id = parseInt(id)
+  }
+  const asset = await orm.asset.update({
+    where: {
+      id: id
+    },
+    data: {
+      name: name,
+      quantity: quantity,
+      value: value,
+      assetTypeId: assetTypeId,
+      attributeId: attributeId
+    }
+  })
+
+  return asset
+}
+
+export async function deleteAsset(
+  parent: unknown,
+  {
+    where,
+  }: {
+    where: Pick<Asset, 'id'>
+  },
+  { orm }: { orm: PrismaClient }
+): Promise<Asset> {
+  const { id } = where
+  const asset = await orm.asset.delete({
+    where: {
+      id: id
     }
   })
 
