@@ -1,0 +1,26 @@
+{
+  "name": "api",
+  "version": "2.0.0",
+  "description": "Backend of the portfolio app with a GraphQL API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon src/index.ts"
+  },
+  "author": "Jorge Ibarra",
+  "license": "MIT",
+  "dependencies": {
+    "apollo-server": "^3.10.2",
+    "body-parser": "^1.20.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.1",
+    "graphql": "^16.6.0",
+    "nodemon": "^2.0.20",
+    "path": "^0.12.7",
+    "prisma": "^4.4.0",
+    "ts-node": "^10.9.1"
+  },
+  "devDependencies": {
+    "@prisma/client": "^4.4.0"
+  }
+}
