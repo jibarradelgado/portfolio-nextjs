@@ -1,8 +1,11 @@
+import Layout from '@components/Layout/Layout'
 import React from 'react'
 
 const HomePage = () => {
   return (
-    <h1>Hello World</h1>
+    <Layout title='Home'>
+    
+    </Layout>
   )
 }
 
