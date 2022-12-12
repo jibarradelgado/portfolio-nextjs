@@ -2,7 +2,10 @@
   "name": "portfolio-nextjs",
   "version": "1.0.0",
   "description": "This is the 2nd version of my portfolio project, now made with Next.js framework.",
-  "main": "index.js",
+  "workspaces": [
+    "api",
+    "pages"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "next dev",

@@ -1,7 +1,21 @@
 scalar DateTime
 
 type Query {
-  assets: [Asset]!
+  assets(where: AssetWhereInput): [Asset]!
+  assetTypes(where: AssetTypeWhereInput): [AssetType]!
+  attributes(where: AttributeWhereInput): [Attribute]!
+}
+
+type Mutation {
+  createAsset(data: AssetCreateInput!): Asset!
+  updateAsset(where: AssetWhereInput!, data: AssetCreateInput!): Asset!
+  deleteAsset(where: AssetWhereInput!): Asset
+  createAssetType(data: AssetCreateInput!): AssetType!
+  updateAssetType(where: AssetTypeWhereInput!, data: AssetTypeCreateInput!): AssetType!
+  deleteAssetType(where: AssetTypeWhereInput!): AssetType
+  createAttribute(data: AttributeCreateInput!): Attribute!
+  updateAttribute(where: AttributeWhereInput!, data: AttributeCreateInput!): Attribute!
+  deleteAttribute(where: AttributeWhereInput!): Attribute
 }
 
 interface BaseModel {
@@ -33,6 +47,7 @@ type AssetType implements BaseModel {
   name: String!
   targetPercentage: Float!
   user: User!
+  userId: Int!
 }
 
 type User implements BaseModel {
@@ -51,4 +66,38 @@ type Attribute {
   name: String
   symbol: String
   lastValue: Float
+}
+
+input AssetCreateInput {
+  name: String!
+  value: Float!
+  quantity: Float
+  assetTypeId: Int!
+  userId: Int
+  attributeId: Int
+}
+
+input AssetWhereInput {
+  id: ID!
+}
+
+input AssetTypeCreateInput {
+  name: String!
+  targetPercentage: Float!
+  userId: Int
+}
+
+input AssetTypeWhereInput {
+  id: ID!
+}
+
+input AttributeCreateInput {
+  type: String!
+  name: String!
+  symbol: String!
+  lastValue: Float!
+}
+
+input AttributeWhereInput {
+  id: ID!
 }
