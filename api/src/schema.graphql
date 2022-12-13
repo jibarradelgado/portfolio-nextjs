@@ -78,7 +78,8 @@ input AssetCreateInput {
 }
 
 input AssetWhereInput {
-  id: ID!
+  id: ID
+  userId: Int
 }
 
 input AssetTypeCreateInput {
@@ -88,7 +89,8 @@ input AssetTypeCreateInput {
 }
 
 input AssetTypeWhereInput {
-  id: ID!
+  id: ID
+  userId: Int
 }
 
 input AttributeCreateInput {
