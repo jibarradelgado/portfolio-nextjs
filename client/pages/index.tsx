@@ -16,34 +16,53 @@ query {
 }
 `
 
-const HomePage = () => {
-  const [items, setItems] = useState([])
+const baseUrl = process.env.NEXT_PUBLIC_SERVICE_URL || 'http://localhost:4000'
 
-  console.log(items)
+const requester = (endpoint?:string, data?: Record<string, number | string>) =>
+fetch(
+  `${baseUrl}${endpoint}`, 
+  {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify(data),
+})
+
+const useAssets = () => {
+  const [data, setData] = useState([])
+  const [status, setStatus] = useState<
+    'success' | 'loading' | 'error' | 'idle'
+  >('idle')
 
   useEffect(() => {
-    const fetchItems = async () => {
+    const fetchData = async () => {
+      setStatus('loading')
       try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_SERVICE_URL}/graphql`, 
-          {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            query
-          }),
-        })
-
+        const response = await requester('/graphql', {query})
         const { data } = (await response.json()) as { data: any }
-        setItems(data)
+        setData(data)
+        setStatus('success')
       } catch (e) {
+        setStatus('error')
         console.log('Something went wrong', e)
       }
     }
-    fetchItems()
+    fetchData()
   }, [])
+
+  return {
+    data,
+    status,
+  }
+}
+
+
+
+const HomePage = () => {
+  const { data, status } = useAssets()
+
+  console.log({ data, status })
 
   return (
     <Layout title='Home'>
