@@ -12,19 +12,10 @@ const assetFragment = `
 		userId
 		assetTypeId
 `
-const userId = `
-  {
-    "where": {
-      "userId": 1
-    }
-  }
-`
-
-const baseUrl = process.env.NEXT_PUBLIC_SERVICE_URL || 'http://localhost:4000'
 
 const useAssets = () => {
   const query = gql`
-    query {
+    query getAllAssets {
       assets {
         ${assetFragment}
       }
@@ -33,9 +24,21 @@ const useAssets = () => {
   return useQuery(query)
 }
 
+const useAsset = (userId: number | string) => {
+  const query = gql`
+    query getAsset($where: AssetWhereInput) {
+      assets (where: $where) {
+        ${assetFragment}
+      }
+    }
+  `
+
+  return useQuery(query, {variables: {where: {userId: userId}}})
+}
+
 
 const HomePage = () => {
-  const { data, loading } = useAssets()
+  const { data, loading } = useAsset(2)
 
   console.log({ data, loading })
 
