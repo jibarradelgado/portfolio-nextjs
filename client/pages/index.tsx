@@ -7,8 +7,8 @@ import { Total } from '@components/Total/total'
 import { Asset } from '@components/Asset/Asset'
 
 const query = `
-query {
-	assets {
+query asset($where: AssetWhereInput) {
+	assets(where: $where) {
 		id
 		name
 		value
@@ -16,6 +16,13 @@ query {
 		assetTypeId
 	}
 }
+`
+const userId = `
+  {
+    "where": {
+      "userId": 1
+    }
+  }
 `
 
 const baseUrl = process.env.NEXT_PUBLIC_SERVICE_URL || 'http://localhost:4000'
@@ -29,12 +36,15 @@ const requester = axios.create({
 })
 
 const useAssets = () => {
-  return useQuery('assets', async () => {
-    const response = await requester.post<{data: any}>('/graphql', { query })
-
+  return useQuery(['assets', userId], async () => {
+    const response = await requester.post<{data: any}>('/graphql', {  
+      query: query,
+      variables: userId
+    })
     return response.data.data
   })
 }
+
 
 const HomePage = () => {
   const { data, status } = useAssets()
