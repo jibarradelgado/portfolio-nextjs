@@ -1,17 +1,22 @@
 import { AppProps } from 'next/app'
-import { QueryClientProvider, QueryClient } from 'react-query'
+import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client'
 import { ReactQueryDevtools } from 'react-query/devtools'
 import 'semantic-ui-css/semantic.min.css'
 import '../globals.css'
 
-const client = new QueryClient()
+const baseUrl = process.env.NEXT_PUBLIC_SERVICE_URL || 'http://localhost:4000'
+
+const client = new ApolloClient({
+  uri: `${baseUrl}\graphql`,
+  cache: new InMemoryCache(),
+})
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
-    <QueryClientProvider client={client}>
+    <ApolloProvider client={client}>
       <Component {...pageProps} />
       <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
+    </ApolloProvider>
   )
 }
 
