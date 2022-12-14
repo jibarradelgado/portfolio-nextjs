@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react'
+import axios from 'axios'
+import { useQuery } from 'react-query'
 import Layout from '@components/Layout/Layout'
 import Menu from '@components/Menu/Menu'
 import { Total } from '@components/Total/total'
@@ -18,46 +20,21 @@ query {
 
 const baseUrl = process.env.NEXT_PUBLIC_SERVICE_URL || 'http://localhost:4000'
 
-const requester = (endpoint?:string, data?: Record<string, number | string>) =>
-fetch(
-  `${baseUrl}${endpoint}`, 
-  {
-  method: 'POST',
+const requester = axios.create({
+  baseURL: baseUrl,
   headers: {
     'Content-Type': 'application/json',
   },
-  body: JSON.stringify(data),
+
 })
 
 const useAssets = () => {
-  const [data, setData] = useState([])
-  const [status, setStatus] = useState<
-    'success' | 'loading' | 'error' | 'idle'
-  >('idle')
+  return useQuery('assets', async () => {
+    const response = await requester.post<{data: any}>('/graphql', { query })
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setStatus('loading')
-      try {
-        const response = await requester('/graphql', {query})
-        const { data } = (await response.json()) as { data: any }
-        setData(data)
-        setStatus('success')
-      } catch (e) {
-        setStatus('error')
-        console.log('Something went wrong', e)
-      }
-    }
-    fetchData()
-  }, [])
-
-  return {
-    data,
-    status,
-  }
+    return response.data.data
+  })
 }
-
-
 
 const HomePage = () => {
   const { data, status } = useAssets()
