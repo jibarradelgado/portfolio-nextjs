@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Layout from '@components/Layout/Layout'
 import Menu from '@components/Menu/Menu'
 import { Total } from '@components/Total/total'
@@ -17,16 +17,32 @@ query {
 `
 
 const HomePage = () => {
+  const [items, setItems] = useState([])
+
+  console.log(items)
+
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_SERVICE_URL}/graphql`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        query
-      })
-    })
+    const fetchItems = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_SERVICE_URL}/graphql`, 
+          {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            query
+          }),
+        })
+
+        const { data } = (await response.json()) as { data: any }
+        setItems(data)
+      } catch (e) {
+        console.log('Something went wrong', e)
+      }
+    }
+    fetchItems()
   }, [])
 
   return (
