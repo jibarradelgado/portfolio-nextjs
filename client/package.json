@@ -9,7 +9,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "generate": "graphql-codegen -r dotenv/config --config codegen.yml"
+    "generate": "graphql-codegen -r dotenv/config --config codegen.yml",
+    "codegen": "graphql-codegen --config codegen.yml"
   },
   "keywords": [],
   "author": "",
@@ -26,6 +27,11 @@
     "semantic-ui-react": "^2.1.4"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "2.16.1",
+    "@graphql-codegen/client-preset": "1.2.3",
+    "@graphql-codegen/typescript": "^2.8.5",
+    "@graphql-codegen/typescript-operations": "^2.5.10",
+    "@graphql-codegen/typescript-react-apollo": "^3.3.7",
     "@types/node": "^18.11.9",
     "@types/react": "^18.0.25",
     "eslint-config-next": "^13.0.5"

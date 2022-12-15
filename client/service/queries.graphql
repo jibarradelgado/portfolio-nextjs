@@ -1,0 +1,9 @@
+query getAllAssets {
+  assets {
+    id
+		name
+		value
+		userId
+		assetTypeId
+  }
+}
