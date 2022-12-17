@@ -1,9 +1,42 @@
+fragment Asset on Asset {
+	id
+	name
+	value
+	userId
+	assetTypeId
+	user {
+		username
+	}
+	type {
+		name
+		targetPercentage
+	}
+}
+
+fragment AssetType on AssetType {
+	id
+	name
+	targetPercentage
+	userId
+	user {
+		username
+	}
+}
+
 query getAllAssets {
   assets {
-    id
-		name
-		value
-		userId
-		assetTypeId
+    ...Asset
   }
+}
+
+query getAllAssetsFromUser ($where: AssetWhereInput) {
+	assets (where: $where) {
+		...Asset
+	}
+}
+
+query getAllAssetTypesFromUser ($where: AssetTypeWhereInput) {
+	assetTypes (where: $where) {
+		...AssetType
+	}
 }
