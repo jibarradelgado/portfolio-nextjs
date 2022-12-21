@@ -1,6 +1,5 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client'
-
-const baseUrl = process.env.NEXT_PUBLIC_SERVICE_URL || 'http://localhost:4000'
+import { baseUrl } from './config'
 
 const client = new ApolloClient({
   uri: `${baseUrl}/graphql`,
@@ -9,7 +8,7 @@ const client = new ApolloClient({
       typePolicies: {
         Query: {
           fields: {
-            avo: {
+            asset: {
               read(_, { args, toReference }) {
                 return toReference({
                   __typename: 'Asset',

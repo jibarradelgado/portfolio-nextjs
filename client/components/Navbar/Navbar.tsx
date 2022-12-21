@@ -1,13 +1,21 @@
 import React from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { Menu, Container, Image } from 'semantic-ui-react'
+import { Button, Menu, Container, Image } from 'semantic-ui-react'
 import { MdPersonOutline} from 'react-icons/md'
+import { useCurrentUser } from '@store/AuthContext'
+import { removeToken } from '@service/auth'
 
 const SIZE = '32px'
 
 const Navbar = () => {
   const { pathname } = useRouter()
+  const { user } = useCurrentUser()
+  
+  const logout = async () => {
+    await removeToken()
+    window.location.reload()
+  }
 
   return (
     <Menu size='small' borderless pointing as="header">
@@ -18,14 +26,14 @@ const Navbar = () => {
           </Menu.Item>
         </Link>
         <Menu.Menu position='right'>
-          <Link href='/' passHref>
+          {/* <Link href='/' passHref>
             <Menu.Item>
               <MdPersonOutline size={SIZE} />
             </Menu.Item>
-          </Link>
+          </Link> */}
           <Link href='/' passHref >
             <Menu.Item>
-              Logout
+              { (user && user!=null) && <Button type="button" basic color="red" onClick={logout}>Logout</Button>}
             </Menu.Item>
           </Link>
         </Menu.Menu>

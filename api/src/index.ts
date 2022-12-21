@@ -20,7 +20,7 @@ export default async function start() {
     typeDefs,
     resolvers,
     context: ({ req }) => {
-      //authenticate before graphql resolvers
+      // authenticate before graphql resolvers
       // if (req.user == undefined) {
       //   throw new AuthenticationError('Unauthenticated')
       // }

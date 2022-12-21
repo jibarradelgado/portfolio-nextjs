@@ -12,6 +12,9 @@ export const AssetList = ( { assets, assetTypes }: AssetProps ) => {
 
   const renderList = () => {
     let sum = 0
+    if (!assets)
+      return (<Card.Group></Card.Group>)
+
     assets.forEach(asset => sum = asset.value + sum)
 
     return (

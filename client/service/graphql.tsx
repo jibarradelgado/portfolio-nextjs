@@ -1,9 +1,11 @@
-import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+import { gql } from '@apollo/client';
+import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+const defaultOptions = {} as const;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -209,8 +211,134 @@ export type GetAllAssetTypesFromUserQueryVariables = Exact<{
 
 export type GetAllAssetTypesFromUserQuery = { __typename?: 'Query', assetTypes: Array<{ __typename?: 'AssetType', id: string, name: string, targetPercentage: number, userId: number, user: { __typename?: 'User', username?: string | null } } | null> };
 
-export const AssetFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Asset"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Asset"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"value"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"assetTypeId"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"username"}}]}},{"kind":"Field","name":{"kind":"Name","value":"type"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"targetPercentage"}}]}}]}}]} as unknown as DocumentNode<AssetFragment, unknown>;
-export const AssetTypeFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AssetType"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AssetType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"targetPercentage"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"username"}}]}}]}}]} as unknown as DocumentNode<AssetTypeFragment, unknown>;
-export const GetAllAssetsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getAllAssets"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"assets"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Asset"}}]}}]}},...AssetFragmentDoc.definitions]} as unknown as DocumentNode<GetAllAssetsQuery, GetAllAssetsQueryVariables>;
-export const GetAllAssetsFromUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getAllAssetsFromUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"where"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"AssetWhereInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"assets"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Asset"}}]}}]}},...AssetFragmentDoc.definitions]} as unknown as DocumentNode<GetAllAssetsFromUserQuery, GetAllAssetsFromUserQueryVariables>;
-export const GetAllAssetTypesFromUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getAllAssetTypesFromUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"where"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"AssetTypeWhereInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"assetTypes"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"AssetType"}}]}}]}},...AssetTypeFragmentDoc.definitions]} as unknown as DocumentNode<GetAllAssetTypesFromUserQuery, GetAllAssetTypesFromUserQueryVariables>;
+export const AssetFragmentDoc = gql`
+    fragment Asset on Asset {
+  id
+  name
+  value
+  userId
+  assetTypeId
+  user {
+    username
+  }
+  type {
+    name
+    targetPercentage
+  }
+}
+    `;
+export const AssetTypeFragmentDoc = gql`
+    fragment AssetType on AssetType {
+  id
+  name
+  targetPercentage
+  userId
+  user {
+    username
+  }
+}
+    `;
+export const GetAllAssetsDocument = gql`
+    query getAllAssets {
+  assets {
+    ...Asset
+  }
+}
+    ${AssetFragmentDoc}`;
+
+/**
+ * __useGetAllAssetsQuery__
+ *
+ * To run a query within a React component, call `useGetAllAssetsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllAssetsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllAssetsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllAssetsQuery(baseOptions?: Apollo.QueryHookOptions<GetAllAssetsQuery, GetAllAssetsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAllAssetsQuery, GetAllAssetsQueryVariables>(GetAllAssetsDocument, options);
+      }
+export function useGetAllAssetsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllAssetsQuery, GetAllAssetsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAllAssetsQuery, GetAllAssetsQueryVariables>(GetAllAssetsDocument, options);
+        }
+export type GetAllAssetsQueryHookResult = ReturnType<typeof useGetAllAssetsQuery>;
+export type GetAllAssetsLazyQueryHookResult = ReturnType<typeof useGetAllAssetsLazyQuery>;
+export type GetAllAssetsQueryResult = Apollo.QueryResult<GetAllAssetsQuery, GetAllAssetsQueryVariables>;
+export const GetAllAssetsFromUserDocument = gql`
+    query getAllAssetsFromUser($where: AssetWhereInput) {
+  assets(where: $where) {
+    ...Asset
+  }
+}
+    ${AssetFragmentDoc}`;
+
+/**
+ * __useGetAllAssetsFromUserQuery__
+ *
+ * To run a query within a React component, call `useGetAllAssetsFromUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllAssetsFromUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllAssetsFromUserQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetAllAssetsFromUserQuery(baseOptions?: Apollo.QueryHookOptions<GetAllAssetsFromUserQuery, GetAllAssetsFromUserQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAllAssetsFromUserQuery, GetAllAssetsFromUserQueryVariables>(GetAllAssetsFromUserDocument, options);
+      }
+export function useGetAllAssetsFromUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllAssetsFromUserQuery, GetAllAssetsFromUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAllAssetsFromUserQuery, GetAllAssetsFromUserQueryVariables>(GetAllAssetsFromUserDocument, options);
+        }
+export type GetAllAssetsFromUserQueryHookResult = ReturnType<typeof useGetAllAssetsFromUserQuery>;
+export type GetAllAssetsFromUserLazyQueryHookResult = ReturnType<typeof useGetAllAssetsFromUserLazyQuery>;
+export type GetAllAssetsFromUserQueryResult = Apollo.QueryResult<GetAllAssetsFromUserQuery, GetAllAssetsFromUserQueryVariables>;
+export const GetAllAssetTypesFromUserDocument = gql`
+    query getAllAssetTypesFromUser($where: AssetTypeWhereInput) {
+  assetTypes(where: $where) {
+    ...AssetType
+  }
+}
+    ${AssetTypeFragmentDoc}`;
+
+/**
+ * __useGetAllAssetTypesFromUserQuery__
+ *
+ * To run a query within a React component, call `useGetAllAssetTypesFromUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllAssetTypesFromUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllAssetTypesFromUserQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetAllAssetTypesFromUserQuery(baseOptions?: Apollo.QueryHookOptions<GetAllAssetTypesFromUserQuery, GetAllAssetTypesFromUserQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAllAssetTypesFromUserQuery, GetAllAssetTypesFromUserQueryVariables>(GetAllAssetTypesFromUserDocument, options);
+      }
+export function useGetAllAssetTypesFromUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllAssetTypesFromUserQuery, GetAllAssetTypesFromUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAllAssetTypesFromUserQuery, GetAllAssetTypesFromUserQueryVariables>(GetAllAssetTypesFromUserDocument, options);
+        }
+export type GetAllAssetTypesFromUserQueryHookResult = ReturnType<typeof useGetAllAssetTypesFromUserQuery>;
+export type GetAllAssetTypesFromUserLazyQueryHookResult = ReturnType<typeof useGetAllAssetTypesFromUserLazyQuery>;
+export type GetAllAssetTypesFromUserQueryResult = Apollo.QueryResult<GetAllAssetTypesFromUserQuery, GetAllAssetTypesFromUserQueryVariables>;

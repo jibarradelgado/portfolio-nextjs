@@ -1,61 +1,27 @@
 import React, { useEffect, useState } from 'react'
 import type { GetStaticProps, InferGetStaticPropsType } from 'next'
+import MainApplication from '@components/MainApplication/MainApplication'
 import Layout from '@components/Layout/Layout'
 import Menu from '@components/Menu/Menu'
 import { Total } from '@components/Total/total'
-import { AssetList } from '@components/AssetList/AssetList' 
-import { Asset, GetAllAssetsFromUserDocument, AssetFragment, AssetType, GetAllAssetTypesFromUserDocument, AssetTypeFragment } from 'service/graphql'
-import client from 'service/client'
+import { AssetList } from '@components/AssetList/AssetList'
+import { AssetFragment, useGetAllAssetsFromUserQuery, AssetTypeFragment, useGetAllAssetTypesFromUserQuery } from '@service/graphql'
+import client from '@service/client'
+import { useCurrentUser } from '@store/AuthContext'
+import Login from '@components/Login/Login'
+import { useRouter } from 'next/router'
 
-export const getStaticProps: GetStaticProps<{assets: AssetFragment[], assetTypes: AssetTypeFragment[]}> = async () => {
-  try {
-    const assetResponse = await client.query({
-      query: GetAllAssetsFromUserDocument,
-      variables: { where: { userId: 1}}
-    })
+const HomePage = () => {
+  const { user, status } = useCurrentUser()
 
-    if (assetResponse.data.assets == null) {
-      throw new Error('Failed to request assets')
-    }
-
-    const assets = assetResponse.data.assets as Asset[]
-
-    const assetTypeResponse = await client.query({
-      query: GetAllAssetTypesFromUserDocument,
-      variables: { where: {userId: 1}}
-    })
-
-    if (assetTypeResponse.data.assetTypes == null) {
-      throw new Error('Failed to request asset types')
-    }
-
-    const assetTypes = assetTypeResponse.data.assetTypes as AssetType[]
-
-    return {
-      props: {
-        assets,
-        assetTypes
-      }
-    }
+  if (user == null) {
+    return <Login />
   }
-  catch (e) {
-    console.log(e)
-    return {
-      props: {
-        assets: [],
-        assetTypes: []
-      }
-    }
-  }
-}
 
-const HomePage = ({assets, assetTypes}: InferGetStaticPropsType<typeof getStaticProps>) => {
+  const id = user.id
+
   return (
-    <Layout title='Home'>
-      <Menu />
-      <Total assets={assets} />
-      <AssetList assets={assets} assetTypes={assetTypes} />
-    </Layout>
+    <MainApplication id={id} />
   )
 }
 
