@@ -211,6 +211,13 @@ export type GetAllAssetTypesFromUserQueryVariables = Exact<{
 
 export type GetAllAssetTypesFromUserQuery = { __typename?: 'Query', assetTypes: Array<{ __typename?: 'AssetType', id: string, name: string, targetPercentage: number, userId: number, user: { __typename?: 'User', username?: string | null } } | null> };
 
+export type AddAssetMutationVariables = Exact<{
+  data: AssetCreateInput;
+}>;
+
+
+export type AddAssetMutation = { __typename?: 'Mutation', createAsset: { __typename?: 'Asset', id: string, name: string, value: number, userId: number, assetTypeId: number, user: { __typename?: 'User', username?: string | null }, type: { __typename?: 'AssetType', name: string, targetPercentage: number } } };
+
 export const AssetFragmentDoc = gql`
     fragment Asset on Asset {
   id
@@ -342,3 +349,36 @@ export function useGetAllAssetTypesFromUserLazyQuery(baseOptions?: Apollo.LazyQu
 export type GetAllAssetTypesFromUserQueryHookResult = ReturnType<typeof useGetAllAssetTypesFromUserQuery>;
 export type GetAllAssetTypesFromUserLazyQueryHookResult = ReturnType<typeof useGetAllAssetTypesFromUserLazyQuery>;
 export type GetAllAssetTypesFromUserQueryResult = Apollo.QueryResult<GetAllAssetTypesFromUserQuery, GetAllAssetTypesFromUserQueryVariables>;
+export const AddAssetDocument = gql`
+    mutation AddAsset($data: AssetCreateInput!) {
+  createAsset(data: $data) {
+    ...Asset
+  }
+}
+    ${AssetFragmentDoc}`;
+export type AddAssetMutationFn = Apollo.MutationFunction<AddAssetMutation, AddAssetMutationVariables>;
+
+/**
+ * __useAddAssetMutation__
+ *
+ * To run a mutation, you first call `useAddAssetMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddAssetMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addAssetMutation, { data, loading, error }] = useAddAssetMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useAddAssetMutation(baseOptions?: Apollo.MutationHookOptions<AddAssetMutation, AddAssetMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddAssetMutation, AddAssetMutationVariables>(AddAssetDocument, options);
+      }
+export type AddAssetMutationHookResult = ReturnType<typeof useAddAssetMutation>;
+export type AddAssetMutationResult = Apollo.MutationResult<AddAssetMutation>;
+export type AddAssetMutationOptions = Apollo.BaseMutationOptions<AddAssetMutation, AddAssetMutationVariables>;

@@ -21,9 +21,9 @@ export default async function start() {
     resolvers,
     context: ({ req }) => {
       // authenticate before graphql resolvers
-      // if (req.user == undefined) {
-      //   throw new AuthenticationError('Unauthenticated')
-      // }
+      if (req.user == undefined) {
+        throw new AuthenticationError('Unauthenticated')
+      }
       console.log('req user: ', req.user)
       return { orm, user: req.user }
     },

@@ -1,8 +1,30 @@
-import { ApolloClient, InMemoryCache } from '@apollo/client'
+import { ApolloClient, InMemoryCache, createHttpLink} from '@apollo/client'
+import { setContext } from '@apollo/client/link/context'
 import { baseUrl } from './config'
+import { retrieveToken } from './auth'
+
+const apiLink = createHttpLink({uri: `${baseUrl}/graphql`})
+
+const authLink = setContext(async(_, { headers }) => {
+  let extraHeaders = {}
+
+  if (typeof window !== 'undefined') {
+    const token = await retrieveToken()
+    extraHeaders = {
+      Authorization: `Bearer ${token}`
+    }
+  }
+
+  return {
+    headers: {
+      ...headers,
+      ...extraHeaders
+    }
+  }
+})
 
 const client = new ApolloClient({
-  uri: `${baseUrl}/graphql`,
+  link: authLink.concat(apiLink),
   cache: new InMemoryCache(
     {
       typePolicies: {

@@ -10,6 +10,8 @@ type UserProps = {
 }
 
 const MainApplication = ({ id }: UserProps) => {
+  const [isChanged, setIsChanged] = useState(false)
+
   const assetsQueryResult = useGetAllAssetsFromUserQuery({
     variables: {
       where: {userId: Number(id)}
@@ -27,7 +29,7 @@ const MainApplication = ({ id }: UserProps) => {
     const assetTypes = assetTypesQueryResult.data.assetTypes as AssetTypeFragment[]
     return (
       <Layout title='Home'>
-        <Menu />
+        <Menu assetTypes={assetTypes}/>
         <Total assets={assets} />
         <AssetList assets={assets} assetTypes={assetTypes} />
       </Layout>
@@ -35,7 +37,6 @@ const MainApplication = ({ id }: UserProps) => {
   } else {
     return (
       <Layout title='Home' >
-        <Menu />
         There was a problem loading assets
       </Layout>
     )

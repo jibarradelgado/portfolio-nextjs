@@ -40,3 +40,9 @@ query getAllAssetTypesFromUser ($where: AssetTypeWhereInput) {
 		...AssetType
 	}
 }
+
+mutation AddAsset($data: AssetCreateInput!) {
+	createAsset(data: $data) {
+		...Asset
+	}
+}

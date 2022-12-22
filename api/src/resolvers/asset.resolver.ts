@@ -69,6 +69,10 @@ export async function createAsset(
       assetTypeId: assetTypeId,
       attributeId: attributeId,
       userId: userId
+    },
+    include: {
+      user: true,
+      type: true
     }
   })
 

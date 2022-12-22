@@ -3,8 +3,13 @@ import { Menu as MenuSemantic, Button, Icon } from 'semantic-ui-react'
 import { AssetForm } from '@components/AssetForm/AssetForm'
 import { AssetTypeForm } from '@components/AssetTypeForm/AssetTypeForm'
 import { CryptoForm } from '@components/CryptoForm/CryptoForm'
+import { AssetTypeFragment } from 'service/graphql'
 
-const Menu = () => {
+type MenuProps = {
+  assetTypes: AssetTypeFragment[]
+}
+
+const Menu = ({assetTypes}: MenuProps) => {
   const [visibleAssetForm, setVisibleAssetForm] = useState(false)
   const [visibleAssetTypeForm, setVisibleAssetTypeForm] = useState(false)
   const [visibleCryptoForm, setVisibleCryptoForm] = useState(false)
@@ -58,7 +63,7 @@ const Menu = () => {
           </Button>
         </MenuSemantic.Item>
       </MenuSemantic>
-      <AssetForm visible={visibleAssetForm} setVisible={setVisibleAssetForm} />
+      <AssetForm visible={visibleAssetForm} setVisible={setVisibleAssetForm} assetTypes={assetTypes}/>
       <AssetTypeForm visible={visibleAssetTypeForm} setVisible={setVisibleAssetTypeForm}/>
       <CryptoForm visible={visibleCryptoForm} setVisible={setVisibleCryptoForm}/>
     </>
