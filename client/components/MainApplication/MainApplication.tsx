@@ -7,40 +7,19 @@ import { AssetFragment, useGetAllAssetsFromUserQuery, AssetTypeFragment, useGetA
 
 type UserProps = {
   id: string
+  assets: AssetFragment[]
+  assetTypes: AssetTypeFragment[]
 }
 
-const MainApplication = ({ id }: UserProps) => {
-  const [isChanged, setIsChanged] = useState(false)
-
-  const assetsQueryResult = useGetAllAssetsFromUserQuery({
-    variables: {
-      where: {userId: Number(id)}
-    }
-  })
-
-  const assetTypesQueryResult = useGetAllAssetTypesFromUserQuery({
-    variables: {
-      where: {userId: Number(id)}
-    }
-  })
-
-  if (assetsQueryResult.data && assetTypesQueryResult.data) {
-    const assets = assetsQueryResult.data.assets as AssetFragment[]
-    const assetTypes = assetTypesQueryResult.data.assetTypes as AssetTypeFragment[]
-    return (
+const MainApplication = ({ id, assets, assetTypes }: UserProps) => {
+  const [assetData, setAssets] = useState(assets)
+  return (
       <Layout title='Home'>
         <Menu assetTypes={assetTypes}/>
-        <Total assets={assets} />
-        <AssetList assets={assets} assetTypes={assetTypes} />
+        <Total assets={assetData} />
+        <AssetList assets={assetData} assetTypes={assetTypes} />
       </Layout>
-    )
-  } else {
-    return (
-      <Layout title='Home' >
-        There was a problem loading assets
-      </Layout>
-    )
-  }
+  )
 }
 
 export default MainApplication

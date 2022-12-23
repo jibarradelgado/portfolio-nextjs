@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Container, DropdownProps, Form, Transition } from 'semantic-ui-react'
-import { AssetTypeFragment } from 'service/graphql'
+import { AssetTypeFragment, GetAllAssetsFromUserDocument } from 'service/graphql'
 import { useMutation } from '@apollo/client'
 import { AddAssetDocument } from 'service/graphql'
 import { useInputValue } from 'hooks/useInputValue'
@@ -13,13 +13,15 @@ type  FormProps = {
 }
 
 export const AssetForm  = ({visible, setVisible, assetTypes}: FormProps) => {
-  const [addAsset, {data, loading}] = useMutation(AddAssetDocument)
+  const [addAsset, {data, loading}] = useMutation(AddAssetDocument, {
+    refetchQueries: [
+      {query: GetAllAssetsFromUserDocument}
+    ]
+  })
   const name = useInputValue('')
   const value = useInputValue(0)
-  const [assetTypeId, setAssetTypeId] = useState(Number(assetTypes[0].id))
+  const [assetTypeId, setAssetTypeId] = useState(0)
   const { user } = useCurrentUser()
-
-  console.log({ data, loading })
 
   const createAsset = () => {
     if (user !== null) {
@@ -32,11 +34,14 @@ export const AssetForm  = ({visible, setVisible, assetTypes}: FormProps) => {
             userId: Number(user.id)
           }
         }
-      })
-    } 
+      }).then(
+        cancelForm()
+      )
+    }
+
   }
 
-  const options = assetTypes.map(assetType => ({
+  const options = assetTypes?.map(assetType => ({
     key: assetType.id,
     text: assetType.name,
     value: assetType.id

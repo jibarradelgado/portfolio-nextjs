@@ -14,7 +14,7 @@ export function findAll(
     include: {
       attribute: true,
       user: true,
-      type: true,
+      type: true
     },
     where: args.where,
   })
