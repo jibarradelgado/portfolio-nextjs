@@ -115,7 +115,7 @@ export type MutationCreateAssetArgs = {
 
 
 export type MutationCreateAssetTypeArgs = {
-  data: AssetCreateInput;
+  data: AssetTypeCreateInput;
 };
 
 
@@ -217,6 +217,43 @@ export type AddAssetMutationVariables = Exact<{
 
 
 export type AddAssetMutation = { __typename?: 'Mutation', createAsset: { __typename?: 'Asset', id: string, name: string, value: number, userId: number, assetTypeId: number, user: { __typename?: 'User', username?: string | null }, type: { __typename?: 'AssetType', name: string, targetPercentage: number } } };
+
+export type DeleteAssetMutationVariables = Exact<{
+  where: AssetWhereInput;
+}>;
+
+
+export type DeleteAssetMutation = { __typename?: 'Mutation', deleteAsset?: { __typename?: 'Asset', id: string, name: string, value: number, userId: number, assetTypeId: number, user: { __typename?: 'User', username?: string | null }, type: { __typename?: 'AssetType', name: string, targetPercentage: number } } | null };
+
+export type UpdateAssetMutationVariables = Exact<{
+  where: AssetWhereInput;
+  data: AssetCreateInput;
+}>;
+
+
+export type UpdateAssetMutation = { __typename?: 'Mutation', updateAsset: { __typename?: 'Asset', id: string, name: string, value: number, userId: number, assetTypeId: number, user: { __typename?: 'User', username?: string | null }, type: { __typename?: 'AssetType', name: string, targetPercentage: number } } };
+
+export type AddAssetTypeMutationVariables = Exact<{
+  data: AssetTypeCreateInput;
+}>;
+
+
+export type AddAssetTypeMutation = { __typename?: 'Mutation', createAssetType: { __typename?: 'AssetType', id: string, name: string, targetPercentage: number, userId: number, user: { __typename?: 'User', username?: string | null } } };
+
+export type DeleteAssetTypeMutationVariables = Exact<{
+  where: AssetTypeWhereInput;
+}>;
+
+
+export type DeleteAssetTypeMutation = { __typename?: 'Mutation', deleteAssetType?: { __typename?: 'AssetType', id: string, name: string, targetPercentage: number, userId: number, user: { __typename?: 'User', username?: string | null } } | null };
+
+export type UpdateAssetTypeMutationVariables = Exact<{
+  where: AssetTypeWhereInput;
+  data: AssetTypeCreateInput;
+}>;
+
+
+export type UpdateAssetTypeMutation = { __typename?: 'Mutation', updateAssetType: { __typename?: 'AssetType', id: string, name: string, targetPercentage: number, userId: number, user: { __typename?: 'User', username?: string | null } } };
 
 export const AssetFragmentDoc = gql`
     fragment Asset on Asset {
@@ -350,7 +387,7 @@ export type GetAllAssetTypesFromUserQueryHookResult = ReturnType<typeof useGetAl
 export type GetAllAssetTypesFromUserLazyQueryHookResult = ReturnType<typeof useGetAllAssetTypesFromUserLazyQuery>;
 export type GetAllAssetTypesFromUserQueryResult = Apollo.QueryResult<GetAllAssetTypesFromUserQuery, GetAllAssetTypesFromUserQueryVariables>;
 export const AddAssetDocument = gql`
-    mutation AddAsset($data: AssetCreateInput!) {
+    mutation addAsset($data: AssetCreateInput!) {
   createAsset(data: $data) {
     ...Asset
   }
@@ -382,3 +419,170 @@ export function useAddAssetMutation(baseOptions?: Apollo.MutationHookOptions<Add
 export type AddAssetMutationHookResult = ReturnType<typeof useAddAssetMutation>;
 export type AddAssetMutationResult = Apollo.MutationResult<AddAssetMutation>;
 export type AddAssetMutationOptions = Apollo.BaseMutationOptions<AddAssetMutation, AddAssetMutationVariables>;
+export const DeleteAssetDocument = gql`
+    mutation deleteAsset($where: AssetWhereInput!) {
+  deleteAsset(where: $where) {
+    ...Asset
+  }
+}
+    ${AssetFragmentDoc}`;
+export type DeleteAssetMutationFn = Apollo.MutationFunction<DeleteAssetMutation, DeleteAssetMutationVariables>;
+
+/**
+ * __useDeleteAssetMutation__
+ *
+ * To run a mutation, you first call `useDeleteAssetMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteAssetMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteAssetMutation, { data, loading, error }] = useDeleteAssetMutation({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useDeleteAssetMutation(baseOptions?: Apollo.MutationHookOptions<DeleteAssetMutation, DeleteAssetMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteAssetMutation, DeleteAssetMutationVariables>(DeleteAssetDocument, options);
+      }
+export type DeleteAssetMutationHookResult = ReturnType<typeof useDeleteAssetMutation>;
+export type DeleteAssetMutationResult = Apollo.MutationResult<DeleteAssetMutation>;
+export type DeleteAssetMutationOptions = Apollo.BaseMutationOptions<DeleteAssetMutation, DeleteAssetMutationVariables>;
+export const UpdateAssetDocument = gql`
+    mutation updateAsset($where: AssetWhereInput!, $data: AssetCreateInput!) {
+  updateAsset(where: $where, data: $data) {
+    ...Asset
+  }
+}
+    ${AssetFragmentDoc}`;
+export type UpdateAssetMutationFn = Apollo.MutationFunction<UpdateAssetMutation, UpdateAssetMutationVariables>;
+
+/**
+ * __useUpdateAssetMutation__
+ *
+ * To run a mutation, you first call `useUpdateAssetMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateAssetMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateAssetMutation, { data, loading, error }] = useUpdateAssetMutation({
+ *   variables: {
+ *      where: // value for 'where'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateAssetMutation(baseOptions?: Apollo.MutationHookOptions<UpdateAssetMutation, UpdateAssetMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateAssetMutation, UpdateAssetMutationVariables>(UpdateAssetDocument, options);
+      }
+export type UpdateAssetMutationHookResult = ReturnType<typeof useUpdateAssetMutation>;
+export type UpdateAssetMutationResult = Apollo.MutationResult<UpdateAssetMutation>;
+export type UpdateAssetMutationOptions = Apollo.BaseMutationOptions<UpdateAssetMutation, UpdateAssetMutationVariables>;
+export const AddAssetTypeDocument = gql`
+    mutation addAssetType($data: AssetTypeCreateInput!) {
+  createAssetType(data: $data) {
+    ...AssetType
+  }
+}
+    ${AssetTypeFragmentDoc}`;
+export type AddAssetTypeMutationFn = Apollo.MutationFunction<AddAssetTypeMutation, AddAssetTypeMutationVariables>;
+
+/**
+ * __useAddAssetTypeMutation__
+ *
+ * To run a mutation, you first call `useAddAssetTypeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddAssetTypeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addAssetTypeMutation, { data, loading, error }] = useAddAssetTypeMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useAddAssetTypeMutation(baseOptions?: Apollo.MutationHookOptions<AddAssetTypeMutation, AddAssetTypeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddAssetTypeMutation, AddAssetTypeMutationVariables>(AddAssetTypeDocument, options);
+      }
+export type AddAssetTypeMutationHookResult = ReturnType<typeof useAddAssetTypeMutation>;
+export type AddAssetTypeMutationResult = Apollo.MutationResult<AddAssetTypeMutation>;
+export type AddAssetTypeMutationOptions = Apollo.BaseMutationOptions<AddAssetTypeMutation, AddAssetTypeMutationVariables>;
+export const DeleteAssetTypeDocument = gql`
+    mutation deleteAssetType($where: AssetTypeWhereInput!) {
+  deleteAssetType(where: $where) {
+    ...AssetType
+  }
+}
+    ${AssetTypeFragmentDoc}`;
+export type DeleteAssetTypeMutationFn = Apollo.MutationFunction<DeleteAssetTypeMutation, DeleteAssetTypeMutationVariables>;
+
+/**
+ * __useDeleteAssetTypeMutation__
+ *
+ * To run a mutation, you first call `useDeleteAssetTypeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteAssetTypeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteAssetTypeMutation, { data, loading, error }] = useDeleteAssetTypeMutation({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useDeleteAssetTypeMutation(baseOptions?: Apollo.MutationHookOptions<DeleteAssetTypeMutation, DeleteAssetTypeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteAssetTypeMutation, DeleteAssetTypeMutationVariables>(DeleteAssetTypeDocument, options);
+      }
+export type DeleteAssetTypeMutationHookResult = ReturnType<typeof useDeleteAssetTypeMutation>;
+export type DeleteAssetTypeMutationResult = Apollo.MutationResult<DeleteAssetTypeMutation>;
+export type DeleteAssetTypeMutationOptions = Apollo.BaseMutationOptions<DeleteAssetTypeMutation, DeleteAssetTypeMutationVariables>;
+export const UpdateAssetTypeDocument = gql`
+    mutation updateAssetType($where: AssetTypeWhereInput!, $data: AssetTypeCreateInput!) {
+  updateAssetType(where: $where, data: $data) {
+    ...AssetType
+  }
+}
+    ${AssetTypeFragmentDoc}`;
+export type UpdateAssetTypeMutationFn = Apollo.MutationFunction<UpdateAssetTypeMutation, UpdateAssetTypeMutationVariables>;
+
+/**
+ * __useUpdateAssetTypeMutation__
+ *
+ * To run a mutation, you first call `useUpdateAssetTypeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateAssetTypeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateAssetTypeMutation, { data, loading, error }] = useUpdateAssetTypeMutation({
+ *   variables: {
+ *      where: // value for 'where'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateAssetTypeMutation(baseOptions?: Apollo.MutationHookOptions<UpdateAssetTypeMutation, UpdateAssetTypeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateAssetTypeMutation, UpdateAssetTypeMutationVariables>(UpdateAssetTypeDocument, options);
+      }
+export type UpdateAssetTypeMutationHookResult = ReturnType<typeof useUpdateAssetTypeMutation>;
+export type UpdateAssetTypeMutationResult = Apollo.MutationResult<UpdateAssetTypeMutation>;
+export type UpdateAssetTypeMutationOptions = Apollo.BaseMutationOptions<UpdateAssetTypeMutation, UpdateAssetTypeMutationVariables>;

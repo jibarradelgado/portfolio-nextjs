@@ -10,7 +10,7 @@ type Mutation {
   createAsset(data: AssetCreateInput!): Asset!
   updateAsset(where: AssetWhereInput!, data: AssetCreateInput!): Asset!
   deleteAsset(where: AssetWhereInput!): Asset
-  createAssetType(data: AssetCreateInput!): AssetType!
+  createAssetType(data: AssetTypeCreateInput!): AssetType!
   updateAssetType(where: AssetTypeWhereInput!, data: AssetTypeCreateInput!): AssetType!
   deleteAssetType(where: AssetTypeWhereInput!): AssetType
   createAttribute(data: AttributeCreateInput!): Attribute!

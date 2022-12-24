@@ -105,6 +105,10 @@ export async function updateAsset(
       value: value,
       assetTypeId: assetTypeId,
       attributeId: attributeId
+    },
+    include: {
+      user: true,
+      type: true
     }
   })
 
@@ -120,10 +124,17 @@ export async function deleteAsset(
   },
   { orm }: { orm: PrismaClient }
 ): Promise<Asset> {
-  const { id } = where
+  let { id } = where
+  if (typeof(id) === 'string') {
+    id = parseInt(id)
+  }
   const asset = await orm.asset.delete({
     where: {
       id: id
+    },
+    include: {
+      user: true,
+      type: true
     }
   })
 

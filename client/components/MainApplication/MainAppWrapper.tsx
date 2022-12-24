@@ -11,17 +11,18 @@ const MainAppWrapper = ({id}: MainAppProps) => {
   const assetsQueryResult = useGetAllAssetsFromUserQuery({
     variables: {
       where: {userId: Number(id)}
-    }
+    },
+    fetchPolicy: 'network-only'
   })
 
   const assetTypesQueryResult = useGetAllAssetTypesFromUserQuery({
     variables: {
       where: {userId: Number(id)}
-    }
+    },
+    fetchPolicy: 'network-only'
   })
 
   if (assetsQueryResult.loading && assetTypesQueryResult.loading) return <Loader active inline />
-  assetsQueryResult.refetch
 
   return (
     <>

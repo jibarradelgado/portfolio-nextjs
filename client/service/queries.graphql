@@ -41,8 +41,34 @@ query getAllAssetTypesFromUser ($where: AssetTypeWhereInput) {
 	}
 }
 
-mutation AddAsset($data: AssetCreateInput!) {
+mutation addAsset($data: AssetCreateInput!) {
 	createAsset(data: $data) {
 		...Asset
+	}
+}
+mutation deleteAsset($where: AssetWhereInput!) {
+	deleteAsset(where: $where) {
+		...Asset
+	}
+}
+mutation updateAsset($where: AssetWhereInput!, $data: AssetCreateInput!) {
+	updateAsset(where: $where, data: $data) {
+		...Asset
+	}
+}
+
+mutation addAssetType($data: AssetTypeCreateInput!) {
+	createAssetType(data: $data) {
+		...AssetType
+	}
+}
+mutation deleteAssetType($where: AssetTypeWhereInput!) {
+	deleteAssetType(where: $where) {
+		...AssetType
+	}
+}
+mutation updateAssetType($where: AssetTypeWhereInput!, $data: AssetTypeCreateInput!) {
+	updateAssetType(where: $where, data: $data) {
+		...AssetType
 	}
 }

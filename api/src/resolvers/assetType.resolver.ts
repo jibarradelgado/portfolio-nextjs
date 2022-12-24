@@ -49,7 +49,10 @@ export async function createAssetType(
       name: name,
       targetPercentage: targetPercentage,
       userId: userId
-    }
+    },
+    include: {
+      user: true,
+    },
   })
   return assetType
 }
@@ -77,6 +80,9 @@ export async function updateAssetType(
     data: {
       name: name,
       targetPercentage: targetPercentage
+    },
+    include: {
+      user: true,
     }
   })
   return assetType
@@ -95,6 +101,9 @@ export async function deleteAssetType(
   const assetType = await orm.assetType.delete({
     where: {
       id: id
+    },
+    include: {
+      user: true,
     }
   })
 

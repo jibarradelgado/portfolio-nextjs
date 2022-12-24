@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 import { Container, DropdownProps, Form, Transition } from 'semantic-ui-react'
-import { AssetTypeFragment, GetAllAssetsFromUserDocument } from 'service/graphql'
+import { AddAssetDocument, AssetTypeFragment, GetAllAssetsFromUserDocument } from 'service/graphql'
 import { useMutation } from '@apollo/client'
-import { AddAssetDocument } from 'service/graphql'
 import { useInputValue } from 'hooks/useInputValue'
 import { useCurrentUser } from '@store/AuthContext'
 
@@ -10,14 +9,16 @@ type  FormProps = {
   visible: boolean
   setVisible: (visible: boolean) => void
   assetTypes: AssetTypeFragment[]
+  setAssetsChanged: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export const AssetForm  = ({visible, setVisible, assetTypes}: FormProps) => {
+export const AssetForm  = ({visible, setVisible, assetTypes, setAssetsChanged}: FormProps) => {
   const [addAsset, {data, loading}] = useMutation(AddAssetDocument, {
     refetchQueries: [
       {query: GetAllAssetsFromUserDocument}
     ]
   })
+  console.log(data)
   const name = useInputValue('')
   const value = useInputValue(0)
   const [assetTypeId, setAssetTypeId] = useState(0)
@@ -33,10 +34,14 @@ export const AssetForm  = ({visible, setVisible, assetTypes}: FormProps) => {
             assetTypeId: assetTypeId,
             userId: Number(user.id)
           }
-        }
-      }).then(
-        cancelForm()
-      )
+        },
+        fetchPolicy: 'network-only'
+      }).then(() => {
+        cancelForm() 
+        setAssetsChanged((toggle) => {
+          return !toggle
+        })
+      })
     }
 
   }
@@ -49,6 +54,8 @@ export const AssetForm  = ({visible, setVisible, assetTypes}: FormProps) => {
   )
 
   const cancelForm = () => {
+    name.setValue('')
+    value.setValue(0)
     setVisible(!visible)
   }
 
@@ -66,8 +73,8 @@ export const AssetForm  = ({visible, setVisible, assetTypes}: FormProps) => {
       >
         <Container >
           <Form>
-            <Form.Input label="Name" type='text' {...name} />
-            <Form.Input label="Value" type='number' {...value} />
+            <Form.Input label="Name" type='text' value={name.value} onChange={name.onChange} />
+            <Form.Input label="Value" type='number' value={value.value} onChange={value.onChange} />
             <Form.Select 
               fluid
               label="Type" 
