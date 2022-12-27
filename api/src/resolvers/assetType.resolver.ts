@@ -97,7 +97,10 @@ export async function deleteAssetType(
   },
   { orm }: { orm: PrismaClient }
 ): Promise<AssetType> {
-  const { id } = where
+  let { id } = where
+  if (typeof(id) === 'string') {
+    id = parseInt(id)
+  }
   const assetType = await orm.assetType.delete({
     where: {
       id: id

@@ -43,7 +43,6 @@ export const AssetForm  = ({visible, setVisible, assetTypes, setAssetsChanged}: 
         })
       })
     }
-
   }
 
   const options = assetTypes?.map(assetType => ({

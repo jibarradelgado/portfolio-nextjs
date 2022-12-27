@@ -3,7 +3,7 @@ import Layout from '@components/Layout/Layout'
 import Menu from '@components/Menu/Menu'
 import { Total } from '@components/Total/total'
 import { AssetList } from '@components/AssetList/AssetList'
-import { AssetFragment, GetAllAssetsFromUserDocument, AssetTypeFragment, useGetAllAssetTypesFromUserQuery } from '@service/graphql'
+import { AssetFragment, GetAllAssetsFromUserDocument, AssetTypeFragment, GetAllAssetTypesFromUserDocument } from '@service/graphql'
 import client from '@service/client'
 
 type UserProps = {
@@ -14,10 +14,11 @@ type UserProps = {
 
 const MainApplication = ({ id, assets, assetTypes }: UserProps) => {
   const [assetData, setAssets] = useState(assets)
+  const [assetTypeData, setAssetTypes] = useState(assetTypes)
   const [isAssetsChanged, setAssetsChanged] = useState(false)
+  const [isAssetTypesChanged, setAssetTypesChanged] = useState(false)
 
   useEffect(() => {
-    console.log("I was activated biatch!")
     client.query({
       query: GetAllAssetsFromUserDocument,
       variables: {
@@ -26,17 +27,30 @@ const MainApplication = ({ id, assets, assetTypes }: UserProps) => {
       fetchPolicy: 'network-only'
     }).then ( res => {
       if (res.data) {
-        console.log("I was activated inside!")
         setAssets(res.data.assets)
       }
     })
   }, [isAssetsChanged])
 
+  useEffect(() => {
+    client.query({
+      query: GetAllAssetTypesFromUserDocument,
+      variables: {
+        where: {userId: Number(id)}
+      },
+      fetchPolicy: 'network-only'
+    }).then ( res => {
+      if (res.data) {
+        setAssetTypes(res.data.assetTypes)
+      }
+    })
+  }, [isAssetTypesChanged])
+
   return (
       <Layout title='Home'>
-        <Menu assetTypes={assetTypes} setAssetsChanged={setAssetsChanged}/>
+        <Menu assetTypes={assetTypeData} setAssetsChanged={setAssetsChanged} setAssetTypesChanged={setAssetTypesChanged}/>
         <Total assets={assetData} />
-        <AssetList assets={assetData} assetTypes={assetTypes} setAssetsChanged={setAssetsChanged} />
+        <AssetList assets={assetData} assetTypes={assetTypeData} setAssetsChanged={setAssetsChanged} />
       </Layout>
   )
 }
