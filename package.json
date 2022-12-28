@@ -10,7 +10,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "next dev",
-    "build": "next build",
+    "build": "yarn workspaces run build",
     "start": "next start"
   },
   "repository": {
