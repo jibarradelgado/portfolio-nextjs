@@ -45,7 +45,7 @@ const Menu = ({assetTypes, setAssetsChanged, setAssetTypesChanged}: MenuProps) =
 
   return (
     <>
-      <MenuSemantic size='large' borderless widths={3}>
+      <MenuSemantic size='large' borderless widths={2}>
         <MenuSemantic.Item>
           <Button id="assetButton" onClick={toggleVisibility} icon labelPosition='left'>
             <Icon name="add" />
@@ -58,12 +58,12 @@ const Menu = ({assetTypes, setAssetsChanged, setAssetTypesChanged}: MenuProps) =
             Add Asset Type
           </Button>
         </MenuSemantic.Item>
-        <MenuSemantic.Item>
+        {/* <MenuSemantic.Item>
           <Button id="cryptoButton" onClick={toggleVisibility} icon labelPosition='left'>
             <Icon name="add" />
             Add Crypto
           </Button>
-        </MenuSemantic.Item>
+        </MenuSemantic.Item> */}
       </MenuSemantic>
       <AssetForm visible={visibleAssetForm} setVisible={setVisibleAssetForm} assetTypes={assetTypes} setAssetsChanged={setAssetsChanged}/>
       <AssetTypeForm visible={visibleAssetTypeForm} setVisible={setVisibleAssetTypeForm} assetTypes={assetTypes} setAssetTypesChanged={setAssetTypesChanged}/>
