@@ -18,7 +18,6 @@ export const AssetForm  = ({visible, setVisible, assetTypes, setAssetsChanged}: 
       {query: GetAllAssetsFromUserDocument}
     ]
   })
-  console.log(data)
   const name = useInputValue('')
   const value = useInputValue(0)
   const [assetTypeId, setAssetTypeId] = useState(0)

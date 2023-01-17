@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Menu as MenuSemantic, Button, Icon } from 'semantic-ui-react'
 import { AssetForm } from '@components/AssetForm/AssetForm'
 import { AssetTypeForm } from '@components/AssetTypeForm/AssetTypeForm'
-import { CryptoForm } from '@components/CryptoForm/CryptoForm'
+import { CryptoSection } from '@components/CryptoForm/CryptoSection'
 import { AssetFragment, AssetTypeFragment } from 'service/graphql'
 
 type MenuProps = {
@@ -67,7 +67,7 @@ const Menu = ({assetTypes, setAssetsChanged, setAssetTypesChanged}: MenuProps) =
       </MenuSemantic>
       <AssetForm visible={visibleAssetForm} setVisible={setVisibleAssetForm} assetTypes={assetTypes} setAssetsChanged={setAssetsChanged}/>
       <AssetTypeForm visible={visibleAssetTypeForm} setVisible={setVisibleAssetTypeForm} assetTypes={assetTypes} setAssetTypesChanged={setAssetTypesChanged}/>
-      <CryptoForm visible={visibleCryptoForm} setVisible={setVisibleCryptoForm}/>
+      <CryptoSection visible={visibleCryptoForm} setVisible={setVisibleCryptoForm} assetTypes={assetTypes} setAssetsChanged={setAssetsChanged}/>
     </>
   )
 }

@@ -86,7 +86,8 @@ export type AttributeCreateInput = {
 };
 
 export type AttributeWhereInput = {
-  id: Scalars['ID'];
+  id?: InputMaybe<Scalars['ID']>;
+  symbol?: InputMaybe<Scalars['String']>;
 };
 
 export type BaseModel = {
@@ -106,6 +107,7 @@ export type Mutation = {
   updateAsset: Asset;
   updateAssetType: AssetType;
   updateAttribute: Attribute;
+  upsertAttribute: Attribute;
 };
 
 
@@ -156,6 +158,12 @@ export type MutationUpdateAttributeArgs = {
   where: AttributeWhereInput;
 };
 
+
+export type MutationUpsertAttributeArgs = {
+  data: AttributeCreateInput;
+  where: AttributeWhereInput;
+};
+
 export type Query = {
   __typename?: 'Query';
   assetTypes: Array<Maybe<AssetType>>;
@@ -192,6 +200,8 @@ export type AssetFragment = { __typename?: 'Asset', id: string, name: string, va
 
 export type AssetTypeFragment = { __typename?: 'AssetType', id: string, name: string, targetPercentage: number, userId: number, user: { __typename?: 'User', username?: string | null } };
 
+export type AttributeFragment = { __typename?: 'Attribute', id: string, type?: string | null, name?: string | null, symbol?: string | null, lastValue?: number | null };
+
 export type GetAllAssetsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -210,6 +220,13 @@ export type GetAllAssetTypesFromUserQueryVariables = Exact<{
 
 
 export type GetAllAssetTypesFromUserQuery = { __typename?: 'Query', assetTypes: Array<{ __typename?: 'AssetType', id: string, name: string, targetPercentage: number, userId: number, user: { __typename?: 'User', username?: string | null } } | null> };
+
+export type GetAllAttributesQueryVariables = Exact<{
+  where?: InputMaybe<AttributeWhereInput>;
+}>;
+
+
+export type GetAllAttributesQuery = { __typename?: 'Query', attributes: Array<{ __typename?: 'Attribute', id: string, type?: string | null, name?: string | null, symbol?: string | null, lastValue?: number | null } | null> };
 
 export type AddAssetMutationVariables = Exact<{
   data: AssetCreateInput;
@@ -255,6 +272,36 @@ export type UpdateAssetTypeMutationVariables = Exact<{
 
 export type UpdateAssetTypeMutation = { __typename?: 'Mutation', updateAssetType: { __typename?: 'AssetType', id: string, name: string, targetPercentage: number, userId: number, user: { __typename?: 'User', username?: string | null } } };
 
+export type AddAttributeMutationVariables = Exact<{
+  data: AttributeCreateInput;
+}>;
+
+
+export type AddAttributeMutation = { __typename?: 'Mutation', createAttribute: { __typename?: 'Attribute', id: string, type?: string | null, name?: string | null, symbol?: string | null, lastValue?: number | null } };
+
+export type DeleteAttributeMutationVariables = Exact<{
+  where: AttributeWhereInput;
+}>;
+
+
+export type DeleteAttributeMutation = { __typename?: 'Mutation', deleteAttribute?: { __typename?: 'Attribute', id: string, type?: string | null, name?: string | null, symbol?: string | null, lastValue?: number | null } | null };
+
+export type UpsertAttributeMutationVariables = Exact<{
+  where: AttributeWhereInput;
+  data: AttributeCreateInput;
+}>;
+
+
+export type UpsertAttributeMutation = { __typename?: 'Mutation', upsertAttribute: { __typename?: 'Attribute', id: string, type?: string | null, name?: string | null, symbol?: string | null, lastValue?: number | null } };
+
+export type UpdateAttributeMutationVariables = Exact<{
+  where: AttributeWhereInput;
+  data: AttributeCreateInput;
+}>;
+
+
+export type UpdateAttributeMutation = { __typename?: 'Mutation', updateAttribute: { __typename?: 'Attribute', id: string, type?: string | null, name?: string | null, symbol?: string | null, lastValue?: number | null } };
+
 export const AssetFragmentDoc = gql`
     fragment Asset on Asset {
   id
@@ -280,6 +327,15 @@ export const AssetTypeFragmentDoc = gql`
   user {
     username
   }
+}
+    `;
+export const AttributeFragmentDoc = gql`
+    fragment Attribute on Attribute {
+  id
+  type
+  name
+  symbol
+  lastValue
 }
     `;
 export const GetAllAssetsDocument = gql`
@@ -386,6 +442,41 @@ export function useGetAllAssetTypesFromUserLazyQuery(baseOptions?: Apollo.LazyQu
 export type GetAllAssetTypesFromUserQueryHookResult = ReturnType<typeof useGetAllAssetTypesFromUserQuery>;
 export type GetAllAssetTypesFromUserLazyQueryHookResult = ReturnType<typeof useGetAllAssetTypesFromUserLazyQuery>;
 export type GetAllAssetTypesFromUserQueryResult = Apollo.QueryResult<GetAllAssetTypesFromUserQuery, GetAllAssetTypesFromUserQueryVariables>;
+export const GetAllAttributesDocument = gql`
+    query getAllAttributes($where: AttributeWhereInput) {
+  attributes(where: $where) {
+    ...Attribute
+  }
+}
+    ${AttributeFragmentDoc}`;
+
+/**
+ * __useGetAllAttributesQuery__
+ *
+ * To run a query within a React component, call `useGetAllAttributesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllAttributesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllAttributesQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetAllAttributesQuery(baseOptions?: Apollo.QueryHookOptions<GetAllAttributesQuery, GetAllAttributesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAllAttributesQuery, GetAllAttributesQueryVariables>(GetAllAttributesDocument, options);
+      }
+export function useGetAllAttributesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllAttributesQuery, GetAllAttributesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAllAttributesQuery, GetAllAttributesQueryVariables>(GetAllAttributesDocument, options);
+        }
+export type GetAllAttributesQueryHookResult = ReturnType<typeof useGetAllAttributesQuery>;
+export type GetAllAttributesLazyQueryHookResult = ReturnType<typeof useGetAllAttributesLazyQuery>;
+export type GetAllAttributesQueryResult = Apollo.QueryResult<GetAllAttributesQuery, GetAllAttributesQueryVariables>;
 export const AddAssetDocument = gql`
     mutation addAsset($data: AssetCreateInput!) {
   createAsset(data: $data) {
@@ -586,3 +677,137 @@ export function useUpdateAssetTypeMutation(baseOptions?: Apollo.MutationHookOpti
 export type UpdateAssetTypeMutationHookResult = ReturnType<typeof useUpdateAssetTypeMutation>;
 export type UpdateAssetTypeMutationResult = Apollo.MutationResult<UpdateAssetTypeMutation>;
 export type UpdateAssetTypeMutationOptions = Apollo.BaseMutationOptions<UpdateAssetTypeMutation, UpdateAssetTypeMutationVariables>;
+export const AddAttributeDocument = gql`
+    mutation addAttribute($data: AttributeCreateInput!) {
+  createAttribute(data: $data) {
+    ...Attribute
+  }
+}
+    ${AttributeFragmentDoc}`;
+export type AddAttributeMutationFn = Apollo.MutationFunction<AddAttributeMutation, AddAttributeMutationVariables>;
+
+/**
+ * __useAddAttributeMutation__
+ *
+ * To run a mutation, you first call `useAddAttributeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddAttributeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addAttributeMutation, { data, loading, error }] = useAddAttributeMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useAddAttributeMutation(baseOptions?: Apollo.MutationHookOptions<AddAttributeMutation, AddAttributeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddAttributeMutation, AddAttributeMutationVariables>(AddAttributeDocument, options);
+      }
+export type AddAttributeMutationHookResult = ReturnType<typeof useAddAttributeMutation>;
+export type AddAttributeMutationResult = Apollo.MutationResult<AddAttributeMutation>;
+export type AddAttributeMutationOptions = Apollo.BaseMutationOptions<AddAttributeMutation, AddAttributeMutationVariables>;
+export const DeleteAttributeDocument = gql`
+    mutation deleteAttribute($where: AttributeWhereInput!) {
+  deleteAttribute(where: $where) {
+    ...Attribute
+  }
+}
+    ${AttributeFragmentDoc}`;
+export type DeleteAttributeMutationFn = Apollo.MutationFunction<DeleteAttributeMutation, DeleteAttributeMutationVariables>;
+
+/**
+ * __useDeleteAttributeMutation__
+ *
+ * To run a mutation, you first call `useDeleteAttributeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteAttributeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteAttributeMutation, { data, loading, error }] = useDeleteAttributeMutation({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useDeleteAttributeMutation(baseOptions?: Apollo.MutationHookOptions<DeleteAttributeMutation, DeleteAttributeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteAttributeMutation, DeleteAttributeMutationVariables>(DeleteAttributeDocument, options);
+      }
+export type DeleteAttributeMutationHookResult = ReturnType<typeof useDeleteAttributeMutation>;
+export type DeleteAttributeMutationResult = Apollo.MutationResult<DeleteAttributeMutation>;
+export type DeleteAttributeMutationOptions = Apollo.BaseMutationOptions<DeleteAttributeMutation, DeleteAttributeMutationVariables>;
+export const UpsertAttributeDocument = gql`
+    mutation upsertAttribute($where: AttributeWhereInput!, $data: AttributeCreateInput!) {
+  upsertAttribute(where: $where, data: $data) {
+    ...Attribute
+  }
+}
+    ${AttributeFragmentDoc}`;
+export type UpsertAttributeMutationFn = Apollo.MutationFunction<UpsertAttributeMutation, UpsertAttributeMutationVariables>;
+
+/**
+ * __useUpsertAttributeMutation__
+ *
+ * To run a mutation, you first call `useUpsertAttributeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpsertAttributeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [upsertAttributeMutation, { data, loading, error }] = useUpsertAttributeMutation({
+ *   variables: {
+ *      where: // value for 'where'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpsertAttributeMutation(baseOptions?: Apollo.MutationHookOptions<UpsertAttributeMutation, UpsertAttributeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpsertAttributeMutation, UpsertAttributeMutationVariables>(UpsertAttributeDocument, options);
+      }
+export type UpsertAttributeMutationHookResult = ReturnType<typeof useUpsertAttributeMutation>;
+export type UpsertAttributeMutationResult = Apollo.MutationResult<UpsertAttributeMutation>;
+export type UpsertAttributeMutationOptions = Apollo.BaseMutationOptions<UpsertAttributeMutation, UpsertAttributeMutationVariables>;
+export const UpdateAttributeDocument = gql`
+    mutation updateAttribute($where: AttributeWhereInput!, $data: AttributeCreateInput!) {
+  updateAttribute(where: $where, data: $data) {
+    ...Attribute
+  }
+}
+    ${AttributeFragmentDoc}`;
+export type UpdateAttributeMutationFn = Apollo.MutationFunction<UpdateAttributeMutation, UpdateAttributeMutationVariables>;
+
+/**
+ * __useUpdateAttributeMutation__
+ *
+ * To run a mutation, you first call `useUpdateAttributeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateAttributeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateAttributeMutation, { data, loading, error }] = useUpdateAttributeMutation({
+ *   variables: {
+ *      where: // value for 'where'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateAttributeMutation(baseOptions?: Apollo.MutationHookOptions<UpdateAttributeMutation, UpdateAttributeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateAttributeMutation, UpdateAttributeMutationVariables>(UpdateAttributeDocument, options);
+      }
+export type UpdateAttributeMutationHookResult = ReturnType<typeof useUpdateAttributeMutation>;
+export type UpdateAttributeMutationResult = Apollo.MutationResult<UpdateAttributeMutation>;
+export type UpdateAttributeMutationOptions = Apollo.BaseMutationOptions<UpdateAttributeMutation, UpdateAttributeMutationVariables>;

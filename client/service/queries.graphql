@@ -23,6 +23,14 @@ fragment AssetType on AssetType {
 	}
 }
 
+fragment Attribute on Attribute {
+	id
+	type
+	name
+	symbol
+	lastValue
+}
+
 query getAllAssets {
   assets {
     ...Asset
@@ -38,6 +46,12 @@ query getAllAssetsFromUser ($where: AssetWhereInput) {
 query getAllAssetTypesFromUser ($where: AssetTypeWhereInput) {
 	assetTypes (where: $where) {
 		...AssetType
+	}
+}
+
+query getAllAttributes($where: AttributeWhereInput) {
+	attributes (where: $where) {
+		...Attribute
 	}
 }
 
@@ -70,5 +84,29 @@ mutation deleteAssetType($where: AssetTypeWhereInput!) {
 mutation updateAssetType($where: AssetTypeWhereInput!, $data: AssetTypeCreateInput!) {
 	updateAssetType(where: $where, data: $data) {
 		...AssetType
+	}
+}
+
+mutation addAttribute($data: AttributeCreateInput!) {
+	createAttribute(data: $data) {
+		...Attribute
+	}
+}
+
+mutation deleteAttribute($where: AttributeWhereInput!) {
+	deleteAttribute(where: $where) {
+		...Attribute
+	}
+}
+
+mutation upsertAttribute($where: AttributeWhereInput!, $data: AttributeCreateInput!) {
+	upsertAttribute(where: $where, data: $data) {
+		...Attribute
+	}
+}
+
+mutation updateAttribute($where: AttributeWhereInput!, $data: AttributeCreateInput!) {
+	updateAttribute(where: $where, data: $data) {
+		...Attribute
 	}
 }

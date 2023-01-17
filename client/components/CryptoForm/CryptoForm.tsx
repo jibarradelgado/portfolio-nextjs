@@ -1,69 +1,70 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { Container, Form, List, Transition } from 'semantic-ui-react'
-import CoinGecko from 'coingecko-api'
-import axios from 'axios'
-import { stringify } from 'querystring'
+import React, { useState } from 'react'
+import { Container, DropdownProps, Form, Label, Transition } from 'semantic-ui-react'
+import { AssetTypeFragment, AttributeFragment, useAddAssetMutation} from 'service/graphql'
 import { useInputValue } from 'hooks/useInputValue'
+import { useCurrentUser } from '@store/AuthContext'
 
 type  FormProps = {
   visible: boolean
   setVisible: (visible: boolean) => void
+  assetTypes: AssetTypeFragment[]
+  setAssetsChanged: React.Dispatch<React.SetStateAction<boolean>>
+  attributes: AttributeFragment 
 }
 
-type CoinsList = {
-  id: string
-  symbol: string
-  name: string
-}
+export const CryptoForm = ({visible, setVisible, assetTypes, setAssetsChanged, attributes}: FormProps) => {
+  const [addAsset, {data, loading, error}] = useAddAssetMutation()
+  const name = useInputValue('')
+  const value = useInputValue(0)
+  const quantity = useInputValue(0)
+  const [assetTypeId, setAssetTypeId] = useState(0)
+  const { user } = useCurrentUser()
 
-export const CryptoForm  = ({visible, setVisible}: FormProps) => {
-  const [ query, setQuery ] = useState('')
-  const [ results, setResults] = useState([] as CoinsList[])
-  const [ allCoins, setAllCoins ] = useState([] as CoinsList[])
-
-  // let coinGeckoClient = new CoinGecko()
-  // const func = async() => {
-  //   let data = await coinGeckoClient.coins.all({per_page: 12674})
-  //   console.log(data)
-  // }
-
-  // useEffect( () => {
-  // }
-  // ,[])
-
-  const filterCoins = ({target}: React.ChangeEvent<HTMLInputElement>) => {
-    if (allCoins.length == 0) {
-      axios.get(`https://api.coingecko.com/api/v3/coins/list`)
-      .then(res => {
-        setAllCoins(res.data)
-        console.log(allCoins)
+  const createAsset = () => {
+    if (user !== null) {
+      addAsset({
+        variables: {
+          data: {
+            name: name.value.toString(),
+            quantity: Number(quantity.value),
+            value: Number(value.value),
+            assetTypeId: assetTypeId,
+            userId: Number(user.id),
+            attributeId: Number(attributes.id)
+          }
+        },
+        fetchPolicy: 'network-only'
+      }).then(() => {
+        cancelForm() 
+        setAssetsChanged((toggle) => {
+          return !toggle
+        })
       })
-    }
-
-    console.log(results)
-
-    const value = target.value
-    setQuery(value)
-    if (value.length >= 3) {
-      console.log(value.length)
-      let count = 0;
-      const filteredResults = allCoins.filter((result:CoinsList) => {
-        if(count > 10) 
-          return false
-        if (result.symbol.toLowerCase().startsWith(query.toLowerCase()) || result.name.toLowerCase().startsWith(query.toLowerCase())) {
-          count++
-          return true
-        }
-      })
-      console.log(filteredResults)
-      setResults(filteredResults)
-    } else {
-      setResults([])
     }
   }
 
+  const options = assetTypes?.map(assetType => ({
+    key: assetType.id,
+    text: assetType.name,
+    value: assetType.id
+  })
+  )
+
   const cancelForm = () => {
+    name.setValue('')
+    quantity.setValue(0)
+    value.setValue(0)
     setVisible(!visible)
+  }
+
+  const updateValue = ({target}: React.ChangeEvent<HTMLInputElement>) => {
+    quantity.setValue(target.value)
+    const totalValue = Number(quantity.value) * attributes.lastValue!
+    value.setValue(totalValue)
+  }
+
+  const handleChange = (event : React.SyntheticEvent<HTMLElement, Event>, data: DropdownProps ) => {
+    setAssetTypeId(Number(data.value))
   }
 
   const renderForm = () => {
@@ -74,28 +75,28 @@ export const CryptoForm  = ({visible, setVisible}: FormProps) => {
         animation='scale'
         duration={500}
       >
-        <Container>
+        <Container >
           <Form>
-            <Form.Input icon="search" placeholder='search...' type='text' value={query} onChange={filterCoins} />
-            <List animated divided selection relaxed>
-              {
-                results.map((result, index) => (
-                  <List.Item key={index} >
-                    <List.Content>
-                      <List.Header>{result.name}</List.Header>
-                      <List.Description>Symbol: {result.symbol}</List.Description>
-                    </List.Content>
-                  </List.Item>
-                ))
-              }
-            </List>
+            <Form.Input label="Name" type='text' value={name.value} onChange={name.onChange} />
+            <Form.Input label="Quantity" type='number' value={quantity.value} onChange={updateValue} />
+            <Form.Select 
+              fluid
+              label="Type" 
+              options={options}
+              onChange={handleChange}
+              />
+            <Label.Group>
+              <Label>Value: <Label.Detail>{value.value} MXN</Label.Detail></Label>
+              <Label>Cryptocurrency: <Label.Detail>{attributes.name}</Label.Detail></Label>
+              <Label>Symbol: <Label.Detail>{attributes.symbol}</Label.Detail></Label>
+              <Label>Market Price: <Label.Detail>{attributes.lastValue} MXN</Label.Detail></Label>
+            </Label.Group>
             <Form.Group>
-              {/* <Form.Button onClick={filterCoins}>Submit</Form.Button>  */}
+              <Form.Button onClick={createAsset}>Submit</Form.Button> 
               <Form.Button onClick={cancelForm}>Cancel</Form.Button>
             </Form.Group>
           </Form>
         </Container>
-
       </Transition>
     )
   }
