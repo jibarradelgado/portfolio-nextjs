@@ -45,7 +45,7 @@ const Menu = ({assetTypes, setAssetsChanged, setAssetTypesChanged}: MenuProps) =
 
   return (
     <>
-      <MenuSemantic size='large' borderless widths={2}>
+      <MenuSemantic size='large' borderless widths={3}>
         <MenuSemantic.Item>
           <Button id="assetButton" onClick={toggleVisibility} icon labelPosition='left'>
             <Icon name="add" />
