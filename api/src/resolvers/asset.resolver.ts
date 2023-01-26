@@ -21,8 +21,8 @@ export function findAll(
 }
 
 export const resolver: Record<
-  keyof (Asset & {attribute: Attribute} & {user: User} & {type: AssetType}),
-  (parent: Asset & { attribute: Attribute} & {user: User} & {type: AssetType}) => unknown
+  keyof (Asset & {attribute: Attribute } & {user: User} & {type: AssetType}),
+  (parent: Asset & { attribute: Attribute } & {user: User} & {type: AssetType}) => unknown
   > = {
     id: (parent) => parent.id,
     createdAt: (parent) => parent.createdAt,
@@ -39,16 +39,19 @@ export const resolver: Record<
       id: parent.user.id,
       username: parent.user.username
     }),
-    attribute: (parent) => ({
-      id: parent.attribute.id,
-      type: parent.attribute.type,
-      name: parent.attribute.name,
-      symbol: parent.attribute.symbol,
-      lastValue: parent.attribute.lastValue
-    }),
+    attribute: (parent) => {
+      if(parent.attribute == null) return null
+      else return {
+        id: parent.attribute.id,
+        type: parent.attribute.type,
+        name: parent.attribute.name,
+        symbol: parent.attribute.symbol,
+        lastValue: parent.attribute.lastValue
+      }
+    },
     assetTypeId: (parent) => parent.assetTypeId,
     userId: (parent) => parent.userId,
-    attributeId: (parent) => parent
+    attributeId: (parent) => parent.attributeId
   }
 
 export async function createAsset(

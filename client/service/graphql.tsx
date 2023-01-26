@@ -196,7 +196,7 @@ export type User = BaseModel & {
   username?: Maybe<Scalars['String']>;
 };
 
-export type AssetFragment = { __typename?: 'Asset', id: string, name: string, value: number, userId: number, assetTypeId: number, user: { __typename?: 'User', username?: string | null }, type: { __typename?: 'AssetType', name: string, targetPercentage: number } };
+export type AssetFragment = { __typename?: 'Asset', id: string, name: string, value: number, quantity?: number | null, userId: number, assetTypeId: number, attributeId?: number | null, user: { __typename?: 'User', username?: string | null }, type: { __typename?: 'AssetType', name: string, targetPercentage: number }, attribute?: { __typename?: 'Attribute', type?: string | null, name?: string | null, symbol?: string | null, lastValue?: number | null } | null };
 
 export type AssetTypeFragment = { __typename?: 'AssetType', id: string, name: string, targetPercentage: number, userId: number, user: { __typename?: 'User', username?: string | null } };
 
@@ -205,14 +205,14 @@ export type AttributeFragment = { __typename?: 'Attribute', id: string, type?: s
 export type GetAllAssetsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllAssetsQuery = { __typename?: 'Query', assets: Array<{ __typename?: 'Asset', id: string, name: string, value: number, userId: number, assetTypeId: number, user: { __typename?: 'User', username?: string | null }, type: { __typename?: 'AssetType', name: string, targetPercentage: number } } | null> };
+export type GetAllAssetsQuery = { __typename?: 'Query', assets: Array<{ __typename?: 'Asset', id: string, name: string, value: number, quantity?: number | null, userId: number, assetTypeId: number, attributeId?: number | null, user: { __typename?: 'User', username?: string | null }, type: { __typename?: 'AssetType', name: string, targetPercentage: number }, attribute?: { __typename?: 'Attribute', type?: string | null, name?: string | null, symbol?: string | null, lastValue?: number | null } | null } | null> };
 
 export type GetAllAssetsFromUserQueryVariables = Exact<{
   where?: InputMaybe<AssetWhereInput>;
 }>;
 
 
-export type GetAllAssetsFromUserQuery = { __typename?: 'Query', assets: Array<{ __typename?: 'Asset', id: string, name: string, value: number, userId: number, assetTypeId: number, user: { __typename?: 'User', username?: string | null }, type: { __typename?: 'AssetType', name: string, targetPercentage: number } } | null> };
+export type GetAllAssetsFromUserQuery = { __typename?: 'Query', assets: Array<{ __typename?: 'Asset', id: string, name: string, value: number, quantity?: number | null, userId: number, assetTypeId: number, attributeId?: number | null, user: { __typename?: 'User', username?: string | null }, type: { __typename?: 'AssetType', name: string, targetPercentage: number }, attribute?: { __typename?: 'Attribute', type?: string | null, name?: string | null, symbol?: string | null, lastValue?: number | null } | null } | null> };
 
 export type GetAllAssetTypesFromUserQueryVariables = Exact<{
   where?: InputMaybe<AssetTypeWhereInput>;
@@ -233,14 +233,14 @@ export type AddAssetMutationVariables = Exact<{
 }>;
 
 
-export type AddAssetMutation = { __typename?: 'Mutation', createAsset: { __typename?: 'Asset', id: string, name: string, value: number, userId: number, assetTypeId: number, user: { __typename?: 'User', username?: string | null }, type: { __typename?: 'AssetType', name: string, targetPercentage: number } } };
+export type AddAssetMutation = { __typename?: 'Mutation', createAsset: { __typename?: 'Asset', id: string, name: string, value: number, quantity?: number | null, userId: number, assetTypeId: number, attributeId?: number | null, user: { __typename?: 'User', username?: string | null }, type: { __typename?: 'AssetType', name: string, targetPercentage: number }, attribute?: { __typename?: 'Attribute', type?: string | null, name?: string | null, symbol?: string | null, lastValue?: number | null } | null } };
 
 export type DeleteAssetMutationVariables = Exact<{
   where: AssetWhereInput;
 }>;
 
 
-export type DeleteAssetMutation = { __typename?: 'Mutation', deleteAsset?: { __typename?: 'Asset', id: string, name: string, value: number, userId: number, assetTypeId: number, user: { __typename?: 'User', username?: string | null }, type: { __typename?: 'AssetType', name: string, targetPercentage: number } } | null };
+export type DeleteAssetMutation = { __typename?: 'Mutation', deleteAsset?: { __typename?: 'Asset', id: string, name: string, value: number, quantity?: number | null, userId: number, assetTypeId: number, attributeId?: number | null, user: { __typename?: 'User', username?: string | null }, type: { __typename?: 'AssetType', name: string, targetPercentage: number }, attribute?: { __typename?: 'Attribute', type?: string | null, name?: string | null, symbol?: string | null, lastValue?: number | null } | null } | null };
 
 export type UpdateAssetMutationVariables = Exact<{
   where: AssetWhereInput;
@@ -248,7 +248,7 @@ export type UpdateAssetMutationVariables = Exact<{
 }>;
 
 
-export type UpdateAssetMutation = { __typename?: 'Mutation', updateAsset: { __typename?: 'Asset', id: string, name: string, value: number, userId: number, assetTypeId: number, user: { __typename?: 'User', username?: string | null }, type: { __typename?: 'AssetType', name: string, targetPercentage: number } } };
+export type UpdateAssetMutation = { __typename?: 'Mutation', updateAsset: { __typename?: 'Asset', id: string, name: string, value: number, quantity?: number | null, userId: number, assetTypeId: number, attributeId?: number | null, user: { __typename?: 'User', username?: string | null }, type: { __typename?: 'AssetType', name: string, targetPercentage: number }, attribute?: { __typename?: 'Attribute', type?: string | null, name?: string | null, symbol?: string | null, lastValue?: number | null } | null } };
 
 export type AddAssetTypeMutationVariables = Exact<{
   data: AssetTypeCreateInput;
@@ -307,14 +307,22 @@ export const AssetFragmentDoc = gql`
   id
   name
   value
+  quantity
   userId
   assetTypeId
+  attributeId
   user {
     username
   }
   type {
     name
     targetPercentage
+  }
+  attribute {
+    type
+    name
+    symbol
+    lastValue
   }
 }
     `;

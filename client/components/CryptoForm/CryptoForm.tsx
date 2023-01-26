@@ -59,7 +59,7 @@ export const CryptoForm = ({visible, setVisible, assetTypes, setAssetsChanged, a
 
   const updateValue = ({target}: React.ChangeEvent<HTMLInputElement>) => {
     quantity.setValue(target.value)
-    const totalValue = Number(quantity.value) * attributes.lastValue!
+    const totalValue = Number(target.value) * attributes.lastValue!
     value.setValue(totalValue)
   }
 

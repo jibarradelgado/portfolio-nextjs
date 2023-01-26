@@ -1,10 +1,11 @@
 import React, { SyntheticEvent, useContext, useEffect, useState } from 'react'
 import { Button, Container, Form, Input, List, ListItemProps, Transition } from 'semantic-ui-react'
-import CoinGecko from 'coingecko-api'
 import axios from 'axios'
 import { AssetTypeFragment, AttributeFragment, useUpsertAttributeMutation } from '@service/graphql'
 import { useCurrentUser } from '@store/AuthContext'
 import { CryptoForm } from './CryptoForm'
+import { fetchCrypto } from '@util/coingeckoAPI'
+import { useAllCoins } from '@store/CoinContext'
 
 type  FormProps = {
   visible: boolean
@@ -20,28 +21,20 @@ type CoinsList = {
 }
 
 export const CryptoSection  = ({visible, setVisible, assetTypes, setAssetsChanged}: FormProps) => {
-  const [ upsertAttribute, { data: upsertData, loading, error } ] = useUpsertAttributeMutation()
+  const [ upsertAttribute, { data: upsertData, loading: upsertLoading, error } ] = useUpsertAttributeMutation()
   const [ query, setQuery ] = useState('')
   const [ results, setResults] = useState([] as CoinsList[])
-  const [ allCoins, setAllCoins ] = useState([] as CoinsList[])
   const { user } = useCurrentUser()
   const [ visibleForm, setVisibleForm ] = useState(false)
   const [ attributesData, setAttributesData ] = useState({} as AttributeFragment)
-  const coinGeckoClient = new CoinGecko()
+  const allCoinData = useAllCoins().allCoins
 
   const filterCoins = ({target}: React.ChangeEvent<HTMLInputElement>) => {
-    if (allCoins.length == 0) {
-      axios.get(`https://api.coingecko.com/api/v3/coins/list`)
-      .then(res => {
-        setAllCoins(res.data)
-      })
-    }
-
     const value = target.value
     setQuery(value)
     if (value.length >= 3) {
       let count = 0;
-      const filteredResults = allCoins.filter((result:CoinsList) => {
+      const filteredResults = allCoinData.filter((result:CoinsList) => {
         if(count > 10) 
           return false
         if (result.symbol.toLowerCase().startsWith(query.toLowerCase()) || result.name.toLowerCase().startsWith(query.toLowerCase())) {
@@ -53,16 +46,6 @@ export const CryptoSection  = ({visible, setVisible, assetTypes, setAssetsChange
     } else {
       setResults([])
     }
-  }
-
-  const fetchCrypto = async(id:string) => {
-    const data = await coinGeckoClient.coins.fetch(id, {})
-      .then(res => {
-        if(res.success) {
-          return res.data
-        }
-      })
-    return data
   }
 
   const selectCrypto = async (event: SyntheticEvent, data: ListItemProps) => {
@@ -84,7 +67,7 @@ export const CryptoSection  = ({visible, setVisible, assetTypes, setAssetsChange
         fetchPolicy: 'network-only'
       })
       .then(() => {
-        if (!loading) {
+        if (!upsertLoading) {
           if (upsertData)
             setAttributesData(upsertData.upsertAttribute)
           setVisibleForm(true)
@@ -92,10 +75,6 @@ export const CryptoSection  = ({visible, setVisible, assetTypes, setAssetsChange
       })
     }
     console.log(cryptoData)
-  }
-
-  const cancelForm = () => {
-    setVisible(!visible)
   }
 
   const renderForm = () => {
@@ -119,8 +98,7 @@ export const CryptoSection  = ({visible, setVisible, assetTypes, setAssetsChange
                 ))
               }
             </List>
-            <CryptoForm visible={visibleForm} setVisible={setVisibleForm} assetTypes={assetTypes} setAssetsChanged={setAssetsChanged} attributes={attributesData} />
-          {/* <Button onClick={cancelForm}>Cancel</Button> */}
+            {!upsertLoading && <CryptoForm visible={visibleForm} setVisible={setVisibleForm} assetTypes={assetTypes} setAssetsChanged={setAssetsChanged} attributes={attributesData} />}
         </Container>
 
       </Transition>

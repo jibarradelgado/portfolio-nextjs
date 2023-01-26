@@ -5,12 +5,15 @@ import client from '@service/client'
 import '../globals.css'
 
 import AuthProvider from '@store/AuthContext'
+import CoinProvider from '@store/CoinContext'
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
     <ApolloProvider client={client}>
       <AuthProvider.AuthProvider>
-        <Component {...pageProps} />
+        <CoinProvider.CoinProvider>
+          <Component {...pageProps} />
+        </CoinProvider.CoinProvider>
       </AuthProvider.AuthProvider>
     </ApolloProvider>
   )

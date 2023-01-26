@@ -2,14 +2,22 @@ fragment Asset on Asset {
 	id
 	name
 	value
+	quantity
 	userId
 	assetTypeId
+	attributeId
 	user {
 		username
 	}
 	type {
 		name
 		targetPercentage
+	}
+	attribute {
+		type
+		name
+		symbol
+		lastValue
 	}
 }
 
