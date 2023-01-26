@@ -51,7 +51,7 @@ model Attribute {
   id        Int     @id @default(autoincrement())
   type      String
   name      String?
-  symbol    String?
+  symbol    String? @unique
   lastValue Decimal?
   updatedAt DateTime? @updatedAt
   Asset Asset[]

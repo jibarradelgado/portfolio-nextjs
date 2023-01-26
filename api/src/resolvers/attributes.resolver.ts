@@ -48,25 +48,60 @@ export async function createAttribute(
   return attribute
 }
 
+export async function upsertAttribute(
+  parent: unknown,
+  {
+    where,
+    data
+  }: {
+    where: Pick<Attribute, 'symbol'>
+    data: Pick<Attribute, 'type' | 'name' | 'symbol' | 'lastValue' >
+  },
+  { orm }: { orm : PrismaClient }
+): Promise<Attribute> {
+  const { type, name, symbol, lastValue } = data
+  const { symbol: symbolWhereNull } = where
+  let symbolWhere: string | undefined
+  if (symbolWhereNull != null) {
+      symbolWhere = symbolWhereNull
+  }
+  const attribute = await orm.attribute.upsert({
+    where: {
+      symbol: symbolWhere
+    },
+    create: {
+      type: type, 
+      name: name,
+      symbol: symbol,
+      lastValue: lastValue
+    },
+    update: {
+      lastValue: lastValue
+    }
+  })
+  return attribute
+}
+
 export async function updateAttribute(
   parent: unknown,
   {
     where,
     data
   }: {
-    where: Pick<Attribute, 'id' >,
+    where: Pick<Attribute, 'symbol' >,
     data: Pick<Attribute, 'type' | 'name' | 'symbol' | 'lastValue' >
   },
   { orm }: { orm : PrismaClient }
 ): Promise<Attribute> {
   const { type, name, symbol, lastValue } = data
-  let { id } = where
-  if (typeof(id) === 'string') {
-    id = parseInt(id)
+  const { symbol: symbolWhereNull } = where
+  let  symbolWhere: string | undefined
+  if (symbolWhereNull != null) {
+      symbolWhere = symbolWhereNull
   }
   const attribute = await orm.attribute.update({
     where: {
-      id: id
+      symbol: symbolWhere
     },
     data: {
       type: type,

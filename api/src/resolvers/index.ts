@@ -7,7 +7,8 @@ export default {
   ...scalars,
   Query: {
     assets: asset.findAll,
-    assetTypes: assetType.findAll
+    assetTypes: assetType.findAll,
+    attributes: attribute.findAll
   },
   Mutation: {
     createAsset: asset.createAsset,
@@ -17,9 +18,11 @@ export default {
     updateAssetType: assetType.updateAssetType,
     deleteAssetType: assetType.deleteAssetType,
     createAttribute: attribute.createAttribute,
+    upsertAttribute: attribute.upsertAttribute,
     updateAttribute: attribute.updateAttribute,
     deleteAttribute: attribute.deleteAttribute
   },
   Asset: asset.resolver,
-  AssetType: assetType.resolver
+  AssetType: assetType.resolver,
+  Attribute: attribute.resolver
 }

@@ -14,6 +14,7 @@ type Mutation {
   updateAssetType(where: AssetTypeWhereInput!, data: AssetTypeCreateInput!): AssetType!
   deleteAssetType(where: AssetTypeWhereInput!): AssetType
   createAttribute(data: AttributeCreateInput!): Attribute!
+  upsertAttribute(where: AttributeWhereInput!, data: AttributeCreateInput!): Attribute!
   updateAttribute(where: AttributeWhereInput!, data: AttributeCreateInput!): Attribute!
   deleteAttribute(where: AttributeWhereInput!): Attribute
 }
@@ -101,5 +102,6 @@ input AttributeCreateInput {
 }
 
 input AttributeWhereInput {
-  id: ID!
+  id: ID
+  symbol: String
 }
