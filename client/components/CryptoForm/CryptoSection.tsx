@@ -6,6 +6,7 @@ import { useCurrentUser } from '@store/AuthContext'
 import { CryptoForm } from './CryptoForm'
 import { fetchCrypto } from '@util/coingeckoAPI'
 import { useAllCoins } from '@store/CoinContext'
+import { createPartiallyEmittedExpression } from 'typescript'
 
 type  FormProps = {
   visible: boolean
@@ -66,15 +67,13 @@ export const CryptoSection  = ({visible, setVisible, assetTypes, setAssetsChange
         },
         fetchPolicy: 'network-only'
       })
-      .then(() => {
+      .then((data) => {
         if (!upsertLoading) {
-          if (upsertData)
-            setAttributesData(upsertData.upsertAttribute)
+          setAttributesData(data.data?.upsertAttribute as AttributeFragment)
           setVisibleForm(true)
         }
       })
     }
-    console.log(cryptoData)
   }
 
   const renderForm = () => {
