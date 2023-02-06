@@ -22,7 +22,7 @@ const MainAppWrapper = ({id}: MainAppProps) => {
     fetchPolicy: 'network-only'
   })
 
-  if (assetsQueryResult.loading && assetTypesQueryResult.loading) return <Loader active inline />
+  if (assetsQueryResult.loading && assetTypesQueryResult.loading) return <Loader active />
 
   return (
     <>
