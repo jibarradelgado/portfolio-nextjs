@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { Button, Card, Input, Icon, Select, DropdownProps, InputProps, Label, Popup } from 'semantic-ui-react'
 import { AssetFragment, AssetTypeFragment, useDeleteAssetMutation, useUpdateAssetMutation, useUpdateAttributeMutation } from 'service/graphql'
 import { useInputValue } from 'hooks/useInputValue'
@@ -22,6 +22,7 @@ export const Asset = ({ asset, assetTypes, percentaje, setAssetsChanged }: Asset
   const value = useInputValue(asset.value)
   const [ quantity, setQuantity ] = useState(asset.quantity)
   const [ assetTypeId, setAssetTypeId ] = useState(asset.assetTypeId)
+  const [ cryptoValue, setCryptoValue ] = useState(asset.value)
   const options = assetTypes.map(assetType => ({
       key: assetType.id,
       text: assetType.name,
@@ -29,6 +30,10 @@ export const Asset = ({ asset, assetTypes, percentaje, setAssetsChanged }: Asset
     })
   )
   const allCoinData = useAllCoins().allCoins
+
+  useEffect(() => {
+    updateAsset(false)
+  }, [cryptoValue])
 
   const deleteAsset = async () => {
     client.clearStore()
@@ -103,6 +108,7 @@ export const Asset = ({ asset, assetTypes, percentaje, setAssetsChanged }: Asset
     if(coinListData != null){
       const coinSpecificData = await fetchCrypto(coinListData.id)
       if (coinSpecificData) {
+        console.log(coinSpecificData.market_data.current_price.mxn)
         updateAttribute({
           variables: {
             where: { symbol: coinSpecificData.symbol },
@@ -117,12 +123,13 @@ export const Asset = ({ asset, assetTypes, percentaje, setAssetsChanged }: Asset
         })
         .then(() => {
           if (!updateAttributeLoading) {
-            if (updateAttributeData) {
-              const result = quantity! * coinSpecificData.market_data.current_price.mxn
-              value.setValue(result)
-              updateAsset(false)
-            }
+            const result = quantity! * coinSpecificData.market_data.current_price.mxn
+            value.setValue(result)
+            setCryptoValue(result)
           }
+        })
+        .catch((error) => {
+          console.log(error)
         })
       }
     }

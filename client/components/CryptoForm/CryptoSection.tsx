@@ -1,12 +1,10 @@
-import React, { SyntheticEvent, useContext, useEffect, useState } from 'react'
-import { Button, Container, Form, Input, List, ListItemProps, Transition } from 'semantic-ui-react'
-import axios from 'axios'
+import React, { SyntheticEvent, useEffect, useState } from 'react'
+import { Container, Input, List, ListItemProps, Transition } from 'semantic-ui-react'
 import { AssetTypeFragment, AttributeFragment, useUpsertAttributeMutation } from '@service/graphql'
 import { useCurrentUser } from '@store/AuthContext'
 import { CryptoForm } from './CryptoForm'
 import { fetchCrypto } from '@util/coingeckoAPI'
 import { useAllCoins } from '@store/CoinContext'
-import { createPartiallyEmittedExpression } from 'typescript'
 
 type  FormProps = {
   visible: boolean
@@ -30,24 +28,28 @@ export const CryptoSection  = ({visible, setVisible, assetTypes, setAssetsChange
   const [ attributesData, setAttributesData ] = useState({} as AttributeFragment)
   const allCoinData = useAllCoins().allCoins
 
-  const filterCoins = ({target}: React.ChangeEvent<HTMLInputElement>) => {
-    const value = target.value
-    setQuery(value)
-    if (value.length >= 3) {
-      let count = 0;
-      const filteredResults = allCoinData.filter((result:CoinsList) => {
-        if(count > 10) 
-          return false
-        if (result.symbol.toLowerCase().startsWith(query.toLowerCase()) || result.name.toLowerCase().startsWith(query.toLowerCase())) {
-          count++
-          return true
-        }
-      })
-      setResults(filteredResults)
-    } else {
-      setResults([])
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      if(query.length >= 3) {
+        let count = 0;
+        const filteredResults = allCoinData.filter((result:CoinsList) => {
+          if(count > 10)
+            return false
+          if (result.symbol.toLowerCase().startsWith(query.toLowerCase()) || result.name.toLowerCase().startsWith(query.toLowerCase())) {
+            count++
+            return true
+          }
+        })
+        setResults(filteredResults)
+      } else {
+        setResults([])
+      }
+    }, 300)
+
+    return () => {
+      window.clearTimeout(timeoutId)
     }
-  }
+  }, [query])
 
   const selectCrypto = async (event: SyntheticEvent, data: ListItemProps) => {
     const { id } = data
@@ -85,10 +87,10 @@ export const CryptoSection  = ({visible, setVisible, assetTypes, setAssetsChange
         duration={500}
       >
         <Container>
-          <Input icon="search" placeholder='search...' type='text' value={query} onChange={filterCoins} />
+          <Input icon="search" placeholder='search...' type='text' value={query} onChange={(e) => setQuery(e.target.value)} />
           <List animated divided selection relaxed>
               {
-                results.map((result, index) => (
+                results.map((result) => (
                   <List.Item id={result.id} key={result.id} onClick={selectCrypto} >
                     <List.Content>
                       {result.name} - {result.symbol}
