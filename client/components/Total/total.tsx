@@ -8,7 +8,6 @@ type TotalProps = {
 
 export const Total = ({ assets }: TotalProps) => {
   let sum = 0;
-  console.log("Total:" + assets)
   if (assets) 
     assets.forEach(asset => sum = asset.value + sum)
 

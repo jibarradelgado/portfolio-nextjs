@@ -27,7 +27,9 @@ const MainApplication = ({ id, assets, assetTypes }: UserProps) => {
       fetchPolicy: 'network-only'
     }).then ( res => {
       if (res.data) {
-        setAssets(res.data.assets)
+        let assets = [...res.data.assets] as AssetFragment[]
+        assets.sort((a,b) => a.id.localeCompare(b.id))
+        setAssets(assets)
       }
     })
   }, [isAssetsChanged])
