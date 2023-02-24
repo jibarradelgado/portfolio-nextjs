@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react'
-import { Button, Card, Input, Icon, Select, DropdownProps, InputProps, Label, Popup } from 'semantic-ui-react'
+import { Button, Card, Input, Icon, Select, DropdownProps, InputProps, Label, Popup, Divider } from 'semantic-ui-react'
 import { AssetFragment, AssetTypeFragment, useDeleteAssetMutation, useUpdateAssetMutation, useUpdateAttributeMutation } from 'service/graphql'
 import { useInputValue } from 'hooks/useInputValue'
 import client from '@service/client'
@@ -13,7 +13,7 @@ type AssetProps = {
   setAssetsChanged: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export const Asset = ({ asset, assetTypes, percentaje, setAssetsChanged }: AssetProps) => {
+export const Asset = ({ asset, assetTypes, percentaje: percentage, setAssetsChanged }: AssetProps) => {
   const [ updateAttribute, { data: updateAttributeData, loading: updateAttributeLoading, error: updateAttributeError } ] = useUpdateAttributeMutation()
   const [ isEditActive, setEditActive ] = useState(false)
   const [ deleteAssetMutation, { data, loading, error }] = useDeleteAssetMutation()
@@ -145,27 +145,26 @@ export const Asset = ({ asset, assetTypes, percentaje, setAssetsChanged }: Asset
          :
         <>
           <Card.Header textAlign='center'>{asset.name}</Card.Header>
-          <Card.Content><Label>Value: <Label.Detail>{asset.value}</Label.Detail> MXN</Label></Card.Content>
+          <Divider />
+          <p><b>Value:</b> {asset.value} MXN</p>
         </>
     }
     else {
       return isEditActive ? 
         <>
+          <Input type="text" placeholder={asset.name} value={name.value} onChange={name.onChange} />
           <Input type='number' placeholder={asset.quantity} value={quantity} onChange={handleQuantityChange} /> 
-          <Card.Content>
-            <Label>Value: <Label.Detail>{value.value}</Label.Detail> MXN</Label>
-            <Label>Market Price: <Label.Detail>{asset.attribute.lastValue}</Label.Detail> MXN</Label>
-          </Card.Content>
+          <p><b>Market Price:</b> {asset.attribute.lastValue} MXN</p>
+          <p><b>Value:</b> {value.value} MXN</p>
         </>
-        : 
+        :
         <>
-          <Popup content='Update crypto market-price and value' trigger={<Button floated='left' circular icon="redo" onClick={updateValue} />} />
+          <Popup content='Update crypto market-price and value' trigger={<Button className='floatingButton' floated='left' circular icon="redo" onClick={updateValue} />} />
           <Card.Header textAlign='center'>{asset.name}</Card.Header>
-          <Card.Content>
-            <Label>Quantity: <Label.Detail>{asset.quantity}</Label.Detail></Label>
-            <Label>Value: <Label.Detail>{asset.value}</Label.Detail> MXN</Label>
-            <Label>Market Price: <Label.Detail>{asset.attribute.lastValue}</Label.Detail> MXN</Label>
-          </Card.Content>
+          <Divider />
+          <p><b>Quantity:</b> {asset.quantity}</p>
+          <p><b>Market Price:</b> {asset.attribute.lastValue} MXN</p>
+          <p><b>Value:</b> {asset.value} MXN</p>
         </>
     }
   }
@@ -174,10 +173,10 @@ export const Asset = ({ asset, assetTypes, percentaje, setAssetsChanged }: Asset
     <Card>
       <Card.Content>
         {assetValue()}
-        {isEditActive ? <Select placeholder="Type" options={options} onChange={handleChange} /> : <p>{asset.type.name}</p> }
-        <p>{percentaje.toFixed(2)}%</p>
+        {isEditActive ? <Select placeholder="Type" defaultValue={assetTypeId.toString()} options={options} onChange={handleChange} /> : <p>{asset.type.name}</p> }
+        <p>Percentage from total: {percentage.toFixed(2)}%</p>
       </Card.Content>
-      <Card.Content>
+      <Card.Content className='cardBottom'>
         <Button onClick={isEditActive ? updateAssetEvent : switchEdit}>{isEditActive ? <Icon name='check' /> : <Icon name='edit' /> }</Button>
         <Button onClick={isEditActive ? switchEdit : deleteAsset}>{isEditActive ? <Icon name='times' /> : <Icon name='trash alternate' /> }</Button>
       </Card.Content>

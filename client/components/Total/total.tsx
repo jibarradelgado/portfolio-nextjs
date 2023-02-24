@@ -12,8 +12,8 @@ export const Total = ({ assets }: TotalProps) => {
     assets.forEach(asset => sum = asset.value + sum)
 
   return (
-    <Container text>
-      <Header textAlign='center'>Total: { sum }</Header>
+    <Container>
+      <Header className='total' textAlign='center'>Total: { Number(sum).toFixed(2) } MXN</Header>
     </Container>
   )
 }

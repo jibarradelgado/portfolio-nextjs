@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Menu as MenuSemantic, Button, Icon } from 'semantic-ui-react'
 import { AssetForm } from '@components/AssetForm/AssetForm'
 import { AssetTypeForm } from '@components/AssetTypeForm/AssetTypeForm'
@@ -15,11 +15,28 @@ const Menu = ({assetTypes, setAssetsChanged, setAssetTypesChanged}: MenuProps) =
   const [visibleAssetForm, setVisibleAssetForm] = useState(false)
   const [visibleAssetTypeForm, setVisibleAssetTypeForm] = useState(false)
   const [visibleCryptoForm, setVisibleCryptoForm] = useState(false)
+  const [width, setWidth] = useState({width: window.innerWidth})
+
+  useEffect(() => {
+    function handleResize() {
+      setWidth({width: window.innerWidth})
+    }
+    window.addEventListener('resize', handleResize)
+
+    return () => { window.removeEventListener('resize', handleResize)}
+  })
+
+
+
+  const isVertical = () => {
+    let width = window.innerWidth
+    if (width > 630) return false
+    else return true
+  }
 
   const toggleVisibility = ({ target }: React.MouseEvent) => {
     if ((target as HTMLButtonElement).id) {
       const buttonId = (target as HTMLButtonElement).id
-      console.log(buttonId)
       switch (buttonId) {
         case "assetButton": {
           setVisibleAssetForm((prevVisible) => !prevVisible)
@@ -45,25 +62,10 @@ const Menu = ({assetTypes, setAssetsChanged, setAssetTypesChanged}: MenuProps) =
 
   return (
     <>
-      <MenuSemantic size='large' borderless widths={3}>
-        <MenuSemantic.Item>
-          <Button id="assetButton" onClick={toggleVisibility} icon labelPosition='left'>
-            <Icon name="add" />
-            Add Asset
-          </Button>
-        </MenuSemantic.Item>
-        <MenuSemantic.Item>
-          <Button id="assetTypeButton" onClick={toggleVisibility} icon labelPosition='left'>
-            <Icon name="add" />
-            Add Asset Type
-          </Button>
-        </MenuSemantic.Item>
-        <MenuSemantic.Item>
-          <Button id="cryptoButton" onClick={toggleVisibility} icon labelPosition='left'>
-            <Icon name="add" />
-            Add Crypto
-          </Button>
-        </MenuSemantic.Item>
+      <MenuSemantic size='large' fluid borderless widths={width.width < 650 ? 1 : 3} vertical={width.width < 650 ? true : false}>
+        <MenuSemantic.Item id='assetButton' name='Add Asset' labelPosition='left' onClick={toggleVisibility}  />
+        <MenuSemantic.Item id='assetTypeButton' name='Add Asset Type' onClick={toggleVisibility} />
+        <MenuSemantic.Item id="cryptoButton" name='Add Crypto' onClick={toggleVisibility} />
       </MenuSemantic>
       <AssetForm visible={visibleAssetForm} setVisible={setVisibleAssetForm} assetTypes={assetTypes} setAssetsChanged={setAssetsChanged}/>
       <AssetTypeForm visible={visibleAssetTypeForm} setVisible={setVisibleAssetTypeForm} assetTypes={assetTypes} setAssetTypesChanged={setAssetTypesChanged}/>
