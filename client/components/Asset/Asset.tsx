@@ -1,5 +1,5 @@
-import React, { Fragment, useEffect, useState } from 'react'
-import { Button, Card, Input, Icon, Select, DropdownProps, InputProps, Label, Popup, Divider } from 'semantic-ui-react'
+import React, { useEffect, useState } from 'react'
+import { Button, Card, Input, Icon, Select, DropdownProps, Popup, Divider, Modal } from 'semantic-ui-react'
 import { AssetFragment, AssetTypeFragment, useDeleteAssetMutation, useUpdateAssetMutation, useUpdateAttributeMutation } from 'service/graphql'
 import { useInputValue } from 'hooks/useInputValue'
 import client from '@service/client'
@@ -29,6 +29,7 @@ export const Asset = ({ asset, assetTypes, percentaje: percentage, setAssetsChan
       value: assetType.id
     })
   )
+  const [modalOpen, setModalOpen] = useState(false)
   const allCoinData = useAllCoins().allCoins
 
   useEffect(() => {
@@ -45,6 +46,7 @@ export const Asset = ({ asset, assetTypes, percentaje: percentage, setAssetsChan
     })
     .then(res => {
       if (!loading) {
+        setModalOpen(false)
         setAssetsChanged((toggle) => {
           return !toggle
         })
@@ -56,10 +58,6 @@ export const Asset = ({ asset, assetTypes, percentaje: percentage, setAssetsChan
           return !toggle
       })
     })
-  }
-
-  const updateAssetEvent = () => {
-    updateAsset(true)
   }
 
   const updateAsset = async (isSwitchEdit: boolean) => {
@@ -170,6 +168,7 @@ export const Asset = ({ asset, assetTypes, percentaje: percentage, setAssetsChan
   }
 
   return (
+    <>
     <Card>
       <Card.Content>
         {assetValue()}
@@ -177,9 +176,29 @@ export const Asset = ({ asset, assetTypes, percentaje: percentage, setAssetsChan
         <p>Percentage from total: {percentage.toFixed(2)}%</p>
       </Card.Content>
       <Card.Content className='cardBottom'>
-        <Button onClick={isEditActive ? updateAssetEvent : switchEdit}>{isEditActive ? <Icon name='check' /> : <Icon name='edit' /> }</Button>
-        <Button onClick={isEditActive ? switchEdit : deleteAsset}>{isEditActive ? <Icon name='times' /> : <Icon name='trash alternate' /> }</Button>
+        <Button onClick={isEditActive ? () => updateAsset(true) : switchEdit}>{isEditActive ? <Icon name='check' /> : <Icon name='edit' /> }</Button>
+        <Button onClick={isEditActive ? switchEdit : () => setModalOpen(true)}>{isEditActive ? <Icon name='times' /> : <Icon name='trash alternate' /> }</Button>
       </Card.Content>
     </Card>
+    <Modal 
+      onClose={() => setModalOpen(false)}
+      open={modalOpen}
+      size='mini'
+    >
+      <Modal.Header>Deleting Asset {asset.name}</Modal.Header>
+      <Modal.Content>Are you sure you want to delete this asset?</Modal.Content>
+      <Modal.Actions>
+        <Button color='red' onClick={() => setModalOpen(false)}>
+          No
+        </Button>
+        <Button
+          positive
+          onClick={deleteAsset}
+        >
+          Yes
+        </Button>
+      </Modal.Actions>
+    </Modal>
+    </>
   )
 }
