@@ -21,7 +21,7 @@ const Layout =  ({ children, title }: LayoutProps) => (
       <title>{!title ? siteTitle : `${title} | ${siteTitle}`}</title>
     </Head>
     <Navbar />
-    <Container as="main" text>
+    <Container as="main" >
       {children}
     </Container>
     <Footer />

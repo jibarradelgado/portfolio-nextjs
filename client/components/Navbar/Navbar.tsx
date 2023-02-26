@@ -19,7 +19,7 @@ const Navbar = () => {
 
   return (
     <Menu size='small' borderless pointing as="header">
-      <Container text>
+      <Container>
         <Link href="/" passHref>
           <Menu.Item title="Home" >
             <Image alt='Assety logo' src='/logo-light.png' size='small' className='logo'/>
@@ -31,7 +31,7 @@ const Navbar = () => {
               <MdPersonOutline size={SIZE} />
             </Menu.Item>
           </Link> */}
-          <Link href='/' passHref >
+          <Link className='menuCenter' href='/' passHref >
             <Menu.Item>
               { (user && user!=null) && <Button type="button" basic color="red" onClick={logout}>Logout</Button>}
             </Menu.Item>
@@ -39,6 +39,11 @@ const Navbar = () => {
         </Menu.Menu>
       </Container>
       <style jsx global>{`
+        .menuCenter{
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
         .logo {
           max-height: 50px;
           object-fit: cover;

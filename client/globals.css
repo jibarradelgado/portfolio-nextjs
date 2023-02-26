@@ -15,3 +15,16 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.ui.cards{
+  margin: 0 -0.5em;
+}
+
+.floatingButton {
+  position: relative;
+  top: -8px;
+}
+
+.cardBottom {
+  max-height: 65px;
+}

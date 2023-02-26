@@ -7,6 +7,7 @@ const Footer = () => {
       as="footer"
       className='footer-segment'>
       <Container text className='footer-container'>
+        <p>Powered by CoinGecko</p>
         <p>&copy; six-pix 2022</p>
       </Container>
       <style jsx global>{`
