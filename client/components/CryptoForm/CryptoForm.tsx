@@ -75,7 +75,7 @@ export const CryptoForm = ({visible, setVisible, assetTypes, setAssetsChanged, a
         animation='scale'
         duration={500}
       >
-        <Container >
+        <Container className='assetForm' >
           <Form>
             <Form.Input label="Name" type='text' value={name.value} onChange={name.onChange} />
             <Form.Input label="Quantity" type='number' value={quantity.value} onChange={updateValue} />

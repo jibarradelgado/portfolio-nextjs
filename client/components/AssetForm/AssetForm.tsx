@@ -69,7 +69,7 @@ export const AssetForm  = ({visible, setVisible, assetTypes, setAssetsChanged}: 
         animation='scale'
         duration={500}
       >
-        <Container >
+        <Container className='assetForm'>
           <Form>
             <Form.Input label="Name" type='text' value={name.value} onChange={name.onChange} />
             <Form.Input label="Value" type='number' value={value.value} onChange={value.onChange} />

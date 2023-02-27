@@ -28,3 +28,16 @@ a {
 .cardBottom {
   max-height: 65px;
 }
+
+.ui.container.loginContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.ui.container.loginContainer .ui.segment{
+  width: 300px;
+}
+
+.ui.container.assetForm {
+  width: 45%;
+}

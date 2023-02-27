@@ -54,7 +54,7 @@ export const AssetTypeForm  = ({visible, setVisible, assetTypes, setAssetTypesCh
         duration={500}
       >
         <>
-        <Container>
+        <Container className='assetForm'>
           <Form>
             <Form.Input label="Name" type='text' value={name.value} onChange={name.onChange} />
             <Form.Input label="Target Percentage" type='number' min='0' max='100' value={percentage.value} onChange={percentage.onChange} />
