@@ -14,6 +14,7 @@ type UserProps = {
 
 const MainApplication = ({ id, assets, assetTypes }: UserProps) => {
   const [assetData, setAssets] = useState(assets)
+  const [sort, setSort] = useState('value')
   const [assetTypeData, setAssetTypes] = useState(assetTypes)
   const [isAssetsChanged, setAssetsChanged] = useState(false)
   const [isAssetTypesChanged, setAssetTypesChanged] = useState(false)
@@ -28,7 +29,7 @@ const MainApplication = ({ id, assets, assetTypes }: UserProps) => {
     }).then ( res => {
       if (res.data) {
         let assets = [...res.data.assets] as AssetFragment[]
-        assets.sort((a,b) => a.id.localeCompare(b.id))
+        sortAssets(assets, sort)
         setAssets(assets)
       }
     })
@@ -48,11 +49,33 @@ const MainApplication = ({ id, assets, assetTypes }: UserProps) => {
     })
   }, [isAssetTypesChanged])
 
+  useEffect(() => {
+    sortAssets(assetData, sort)
+  }, [sort])
+
+  const sortAssets = (assets: AssetFragment[], sort: String) => {
+    console.log(sort)
+    if (assets && sort) {
+      switch(sort) {
+        case 'type' :
+          assets.sort((a, b) => a.assetTypeId - b.assetTypeId)
+          break
+        case 'name':
+          assets.sort((a, b) => a.name.localeCompare(b.name))
+          break
+        case 'value':
+          assets.sort((a, b) => b.value - a.value)
+          break
+      }
+      setAssets([...assets])
+    }
+  }
+
   return (
       <Layout title='Home'>
         <Menu assetTypes={assetTypeData} setAssetsChanged={setAssetsChanged} setAssetTypesChanged={setAssetTypesChanged}/>
         <Total assets={assetData} />
-        <AssetList assets={assetData} assetTypes={assetTypeData} setAssetsChanged={setAssetsChanged} />
+        <AssetList assets={assetData} assetTypes={assetTypeData} setSort={setSort} setAssetsChanged={setAssetsChanged} />
       </Layout>
   )
 }

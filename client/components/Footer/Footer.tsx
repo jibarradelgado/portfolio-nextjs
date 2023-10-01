@@ -15,7 +15,7 @@ const Footer = () => {
           text-align: center;
         }
         .ui.segment.footer-segment {
-          position: fixed;
+          margin-top: auto;
           bottom: 0;
           width: 100%;
         }
